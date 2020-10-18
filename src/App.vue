@@ -2,21 +2,24 @@
   <div>
     <new-message-form @send="addMessage" />
     <message-list :messages="messages" />
-    <audio-list />
+    <simple />
+    <audio-recorder/>
   </div>
 </template>
 
 <script>
 import NewMessageForm from './components/NewMessageForm';
 import MessageList from './components/MessageList';
-import AudioList from './components/AudioList'
+import Simple from './components/Simple';
+import AudioRecorder from './components/AudioRecorder';
 
 export default {
   name: 'App',
   components: {
     NewMessageForm,
     MessageList,
-    AudioList
+    Simple,
+    AudioRecorder,
   },
   data() {
     return {
@@ -26,7 +29,7 @@ export default {
   methods: {
     addMessage(text) {
       this.messages.unshift(text);
-    },
+    }
   },
 };
 </script>
