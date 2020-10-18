@@ -2,18 +2,21 @@
   <div>
     <new-message-form @send="addMessage" />
     <message-list :messages="messages" />
+    <audio-list />
   </div>
 </template>
 
 <script>
 import NewMessageForm from './components/NewMessageForm';
 import MessageList from './components/MessageList';
+import AudioList from './components/AudioList'
 
 export default {
   name: 'App',
   components: {
     NewMessageForm,
-    MessageList
+    MessageList,
+    AudioList
   },
   data() {
     return {
