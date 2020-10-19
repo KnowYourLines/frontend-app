@@ -2,14 +2,7 @@
   <div class="row">
     <div class="col-2">
       <div class="form-group">
-        <div
-          class="btn-group-vertical buttons"
-          role="group"
-          aria-label="Basic example"
-        >
-          <button class="btn btn-secondary" @click="add">Add</button>
-          <button class="btn btn-secondary" @click="replace">Replace</button>
-        </div>
+        <audio-recorder @recording-done="recordingDone" />
 
         <div class="form-check">
           <input
@@ -49,13 +42,14 @@
 
 <script>
 import draggable from "vuedraggable";
+import AudioRecorder from "./AudioRecorder";
 let id = 1;
 export default {
-  name: "simple",
-  display: "Simple",
+  name: "AudioList",
   order: 0,
   components: {
-    draggable
+    draggable,
+    AudioRecorder,
   },
   data() {
     return {
@@ -63,27 +57,31 @@ export default {
       list: [
         { name: "John", id: 0 },
         { name: "Joao", id: 1 },
-        { name: "Jean", id: 2 }
+        { name: "Jean", id: 2 },
       ],
-      dragging: false
+      dragging: false,
     };
   },
   computed: {
     draggingInfo() {
       return this.dragging ? "under drag" : "";
-    }
+    },
   },
   methods: {
-    add: function() {
+    add: function () {
       this.list.push({ name: "Juan " + id, id: id++ });
     },
-    replace: function() {
+    replace: function () {
       this.list = [{ name: "Edgard", id: id++ }];
     },
-    checkMove: function(e) {
+    checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
-    }
-  }
+    },
+    recordingDone: function (recording) {
+      console.log("hello");
+      this.list.push({ name: "Juan " + id, id: recording });
+    },
+  },
 };
 </script>
 <style scoped>
