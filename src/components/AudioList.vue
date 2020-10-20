@@ -50,11 +50,11 @@ button {
   padding: 1em;
   width: 200px;
   background: transparent;
-  border: 4px solid #f22f46;
+  border: 4px solid #2257ca;
   border-radius: 4px;
   transition: all 0.4s ease 0s;
   cursor: pointer;
-  color: #f22f46;
+  color: #2257ca;
   margin-bottom: 4em;
   margin: 0;
   position: relative;
@@ -65,7 +65,24 @@ button {
 }
 button:hover,
 button:focus {
-  background: #f22f46;
+  background: #2257ca;
   color: #fff;
+}
+div.list-group-item {
+  font-size: 18px;
+  font-weight: 200;
+  font-family: helvetica;
+  padding: 1em;
+  width: 500px;
+  background: transparent;
+  border: 4px solid #87169e;
+  border-radius: 4px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  color: #87169e;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
