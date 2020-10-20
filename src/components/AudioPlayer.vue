@@ -14,9 +14,9 @@ export default {
     methods: {
     playAll: function (recordings) {
       var index = 0
-      var first_line = recordings[index];
       var player = new Audio()
-      player.src = first_line["recording"];
+      var line = recordings[index]["recording"]
+      player.src = window.URL.createObjectURL(line);
       player.play();
       player.addEventListener(
         "ended",
@@ -25,8 +25,8 @@ export default {
           if (index > recordings.length - 1) {
             return
           }
-          let current_line = recordings[index];
-          player.src = current_line['recording']
+          line = (recordings[index]["recording"])
+          player.src = window.URL.createObjectURL(line);
           player.play();
         }.bind(this)
       );

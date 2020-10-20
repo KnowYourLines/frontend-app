@@ -25,7 +25,7 @@ export default {
       this.recorder.stop();
       this.audioData = new Blob(this.dataArray, { type: "audio/wav"});
       this.audioSrc = window.URL.createObjectURL(this.audioData);
-      this.$emit('recording-done', this.audioSrc);
+      this.$emit('recording-done', this.audioData);
       let clip = new Audio(this.audioSrc);
       clip.play();
     },
