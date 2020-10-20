@@ -25,9 +25,7 @@ export default {
   },
   data() {
     return {
-      current: {},
       list: [],
-      player: new Audio(),
     };
   },
   methods: {
@@ -39,20 +37,22 @@ export default {
       this.list.push({ name: character, recording: recording });
     },
     playAll: function () {
+      var current = {}
       var index = 0
-      var first_clip = this.list[index];
-      this.player.src = first_clip["recording"];
-      this.player.play();
-      this.player.addEventListener(
+      var first_line = this.list[index];
+      var player = new Audio()
+      player.src = first_line["recording"];
+      player.play();
+      player.addEventListener(
         "ended",
         function () {
           index++;
           if (index > this.list.length - 1) {
             return
           }
-          this.current = this.list[index];
-          this.player.src = this.current['recording']
-          this.player.play();
+          current = this.list[index];
+          player.src = current['recording']
+          player.play();
         }.bind(this)
       );
     },
