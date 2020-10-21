@@ -22,9 +22,6 @@ describe('Recording a line', () => {
 
         cy.get('div.list-group-item').eq(1).should('contain', 'my custom message')
 
-        cy.get('button').contains('Record')
-            .click();
-
         cy.get('button').contains('Play Nonstop')
             .click();
 
