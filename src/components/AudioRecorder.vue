@@ -1,15 +1,19 @@
 <template>
   <div>
-    <button @click="recordAudio" type="button">Record</button>
-    <button type="button" @click="stop">Stop</button>
+    <button v-if="!isRecording" @click="recordAudio" type="button">Record</button>
+    <button v-else type="button" @click="stop">Stop</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "AudioRecorder",
+  data(){
+    return {isRecording: false}
+  },
   methods: {
     recordAudio() {
+      this.isRecording = true;
       this.dataArray = [];
       let device = navigator.mediaDevices.getUserMedia({ audio: true });
       device.then((stream) => {
@@ -22,6 +26,7 @@ export default {
       });
     },
     stop() {
+      this.isRecording = false;
       this.recorder.stop();
       this.audioData = new Blob(this.dataArray, { type: "audio/wav"});
       this.audioSrc = window.URL.createObjectURL(this.audioData);
