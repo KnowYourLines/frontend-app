@@ -29,11 +29,10 @@ export default {
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
     },
-    recordingDone: function (recording) {
-      let character = window.prompt("Enter character name", "Harry Potter");
+    recordingDone: function (line) {
       this.list.push({
-        name: character,
-        recording: recording,
+        name: line['character'],
+        recording: line['recording'],
         id: uniqueId("line-"),
       });
     },
