@@ -1,10 +1,23 @@
 <template>
   <div>
     <audio-recorder @recording-done="recordingDone" />
-    <button @click="playNonstop" type="button">Play Nonstop</button>
+    <button class="play" @click="playNonstop" type="button">Play Nonstop</button>
     <draggable :list="list" :move="checkMove" class="list-group">
       <div class="list-group-item" v-for="element in list" :key="element.id">
         {{ element.name }}
+        <button
+        type="button"
+        class="btn"
+      >
+        Edit
+      </button>
+      <button
+        type="button"
+        class="btn"
+        @click="deleteLine(element.id)"
+      >
+        Delete
+      </button>
       </div>
     </draggable>
   </div>
@@ -39,11 +52,15 @@ export default {
     playNonstop: function () {
       this.$emit("play-nonstop", this.list);
     },
+    deleteLine(lineId) {
+      const lineIndex = this.list.findIndex((line) => line.id === lineId);
+      this.list.splice(lineIndex, 1);
+    }
   },
 };
 </script>
 <style scoped>
-button {
+button.play {
   font-size: 18px;
   font-weight: 200;
   padding: 1em;
