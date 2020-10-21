@@ -1,4 +1,4 @@
-# learn-tdd-in-vue
+# frontend-app
 
 ## Project setup
 ```
