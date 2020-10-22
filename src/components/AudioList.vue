@@ -24,7 +24,7 @@
           </button>
         </div>
         <div v-else>
-          <label class="edit-label">Change name: </label>
+          <label class="edit-label">Edit name: </label>
           <input
             type="text"
             autocomplete="on"
