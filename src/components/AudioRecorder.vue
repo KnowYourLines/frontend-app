@@ -12,7 +12,7 @@
 export default {
   name: "AudioRecorder",
   data() {
-    return { isRecording: false, character: "Harry Potter" };
+    return { isRecording: false, character: "Character name" };
   },
   methods: {
     recordAudio() {
