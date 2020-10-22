@@ -1,23 +1,26 @@
 <template>
   <div>
     <audio-recorder @recording-done="recordingDone" />
-    <button class="play" @click="playNonstop" type="button">Play Nonstop</button>
+    <button class="play" @click="playNonstop" type="button">
+      Play Nonstop
+    </button>
     <draggable :list="list" :move="checkMove" class="list-group">
       <div class="list-group-item" v-for="element in list" :key="element.id">
         {{ element.name }}
-        <button
-        type="button"
-        class="btn"
-      >
-        Edit
-      </button>
-      <button
-        type="button"
-        class="btn"
-        @click="deleteLine(element.id)"
-      >
-        Delete
-      </button>
+        <div class="btn-group" v-if="!isEditing">
+          <button type="button" class="btn" @click="toggleToItemEditForm">Edit</button>
+          <button type="button" class="btn" @click="deleteLine(element.id)">
+            Delete
+          </button>
+        </div>
+        <audio-edit
+          v-else
+          :id="element.id"
+          :name="element.name"
+          @item-edited="itemEdited"
+          @edit-cancelled="editCancelled"
+          >></audio-edit
+        >
       </div>
     </draggable>
   </div>
@@ -26,16 +29,19 @@
 <script>
 import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
+import AudioEdit from "./AudioEdit";
 import uniqueId from "lodash.uniqueid";
 export default {
   name: "AudioList",
   components: {
     draggable,
     AudioRecorder,
+    AudioEdit
   },
   data() {
     return {
       list: [],
+      isEditing: false,
     };
   },
   methods: {
@@ -44,8 +50,8 @@ export default {
     },
     recordingDone: function (line) {
       this.list.push({
-        name: line['character'],
-        recording: line['recording'],
+        name: line["character"],
+        recording: line["recording"],
         id: uniqueId("line-"),
       });
     },
@@ -55,7 +61,20 @@ export default {
     deleteLine(lineId) {
       const lineIndex = this.list.findIndex((line) => line.id === lineId);
       this.list.splice(lineIndex, 1);
-    }
+    },
+    toggleToItemEditForm() {
+      this.isEditing = true;
+    },
+    editCancelled() {
+      this.isEditing = false;
+    },
+    itemEdited(newName, lineId) {
+      const lineIndex = this.list.findIndex((line) => line.id === lineId);
+      let line = this.list[lineIndex]
+      line['name'] = newName;
+      this.list.splice(lineIndex, 1, line);
+      this.isEditing = false;
+    },
   },
 };
 </script>
