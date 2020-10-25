@@ -62,6 +62,7 @@ export default {
         name: line["character"],
         recording: line["recording"],
         id: uniqueId("line-"),
+        shouldPlay: true,
       });
     },
     playNonstop: function () {

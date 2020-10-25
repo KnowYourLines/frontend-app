@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="btn-group" v-if="!isEditing">
-      <button type="button" class="btn" @click="deleteLine(element.id)">
+        <input type="checkbox" v-model="element.shouldPlay" />
+        <label class="edit-label">Include when played</label>
+        <button type="button" class="btn" @click="deleteLine(element.id)">
         Delete
       </button>
     </div>
@@ -40,7 +42,8 @@ button {
   transition: all 0.4s ease 0s;
   cursor: pointer;
   color: #87169e;
-  display: grid;
+  display: inline-block;
+  margin-left: 2em
 }
 button:hover,
 button:focus {
