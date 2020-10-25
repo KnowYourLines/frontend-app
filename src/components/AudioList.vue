@@ -12,25 +12,15 @@
     >
       Edit
     </button>
-    <div class="btn-group" v-else>
-      <button type="button" class="edit" @click="editDone">Done</button>
-    </div>
+    <button type="button" class="edit" @click="editDone">Done</button>
     <draggable :list="list" :move="checkMove" class="list-group">
       <div class="list-group-item" v-for="element in list" :key="element.id">
         {{ element.name }}
-        <div class="btn-group" v-if="!isEditing">
-          <button type="button" class="btn" @click="deleteLine(element.id)">
-            Delete
-          </button>
-        </div>
-        <div v-else>
-          <label class="edit-label">Edit name: </label>
-          <input
-            type="text"
-            autocomplete="on"
-            v-model.lazy.trim="element.name"
-          />
-        </div>
+        <audio-edit
+          :isEditing="isEditing"
+          :element="element"
+          @delete-line="deletion"
+        />
       </div>
     </draggable>
   </div>
@@ -39,18 +29,19 @@
 <script>
 import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
+import AudioEdit from "./AudioEdit";
 import uniqueId from "lodash.uniqueid";
 export default {
   name: "AudioList",
   components: {
     draggable,
     AudioRecorder,
+    AudioEdit,
   },
   data() {
     return {
       list: [],
       isEditing: false,
-      newName: "",
     };
   },
   methods: {
@@ -67,7 +58,7 @@ export default {
     playNonstop: function () {
       this.$emit("play-nonstop", this.list);
     },
-    deleteLine(lineId) {
+    deletion(lineId) {
       const lineIndex = this.list.findIndex((line) => line.id === lineId);
       this.list.splice(lineIndex, 1);
     },
