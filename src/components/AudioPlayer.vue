@@ -1,35 +1,51 @@
 <template>
   <div>
-      <audio-list @play-nonstop="playAll"/>
+    <audio-list
+      :isPlaying="isPlaying"
+      @play-nonstop="playAll"
+      @stop-playing="pause"
+    />
   </div>
 </template>
 
 <script>
 import AudioList from "./AudioList";
 export default {
-    name: "AudioPlayer",
-    components: {
-    AudioList
+  name: "AudioPlayer",
+  components: {
+    AudioList,
   },
-    methods: {
+  data() {
+    return {
+      player: new Audio(),
+      isPlaying: false,
+    };
+  },
+  methods: {
     playAll: function (recordings) {
-      var index = 0
-      var player = new Audio()
-      var line = recordings[index]["recording"]
-      player.src = window.URL.createObjectURL(line);
-      player.play();
-      player.addEventListener(
+      var index = 0;
+      var line = recordings[index]["recording"];
+      this.player.src = window.URL.createObjectURL(line);
+      this.player.play();
+      this.isPlaying = true;
+      this.player.addEventListener(
         "ended",
         function () {
           index++;
-          if (index > recordings.length - 1) {
-            return
+          if (index == recordings.length) {
+            index = 0;
           }
-          line = (recordings[index]["recording"])
-          player.src = window.URL.createObjectURL(line);
-          player.play();
+          if (index < recordings.length) {
+            line = recordings[index]["recording"];
+            this.player.src = window.URL.createObjectURL(line);
+            this.player.play();
+          }
         }.bind(this)
       );
+    },
+    pause: function () {
+      this.isPlaying = false;
+      this.player.pause();
     },
   },
 };

@@ -2,9 +2,10 @@
   <div>
     <audio-recorder @recording-done="recordingDone" />
     <div class="btn-group">
-      <button class="play" @click="playNonstop" type="button">
+      <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
       </button>
+      <button type="button" class="play" v-else @click="stopPlaying">Stop</button>
       <button
         class="edit"
         @click="toggleToItemEditForm"
@@ -46,6 +47,12 @@ export default {
       isEditing: false,
     };
   },
+  props: {
+    isPlaying: {
+      type: Boolean,
+      required: true,
+    },
+  },
   methods: {
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
@@ -59,6 +66,9 @@ export default {
     },
     playNonstop: function () {
       this.$emit("play-nonstop", this.list);
+    },
+    stopPlaying: function () {
+      this.$emit("stop-playing");
     },
     deletion(lineId) {
       const lineIndex = this.list.findIndex((line) => line.id === lineId);
