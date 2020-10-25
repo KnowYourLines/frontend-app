@@ -1,18 +1,20 @@
 <template>
   <div>
     <audio-recorder @recording-done="recordingDone" />
-    <button class="play" @click="playNonstop" type="button">
-      Play Nonstop
-    </button>
-    <button
-      class="edit"
-      @click="toggleToItemEditForm"
-      v-if="!isEditing"
-      type="button"
-    >
-      Edit
-    </button>
-    <button type="button" class="edit" @click="editDone">Done</button>
+    <div class="btn-group">
+      <button class="play" @click="playNonstop" type="button">
+        Play Nonstop
+      </button>
+      <button
+        class="edit"
+        @click="toggleToItemEditForm"
+        v-if="!isEditing"
+        type="button"
+      >
+        Edit
+      </button>
+      <button type="button" v-else class="edit" @click="editDone">Done</button>
+    </div>
     <draggable :list="list" :move="checkMove" class="list-group">
       <div class="list-group-item" v-for="element in list" :key="element.id">
         {{ element.name }}
@@ -72,11 +74,11 @@ export default {
 };
 </script>
 <style scoped>
-button.play {
+.btn-group button {
+  width:50%;
   font-size: 18px;
   font-weight: 200;
   padding: 1em;
-  width: 200px;
   background: transparent;
   border: 4px solid #2257ca;
   border-radius: 4px;
@@ -84,37 +86,14 @@ button.play {
   cursor: pointer;
   color: #2257ca;
   margin-bottom: 4em;
-  margin: 0;
   position: relative;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
 }
-button.edit {
-  font-size: 18px;
-  font-weight: 200;
-  padding: 1em;
-  width: 200px;
-  background: transparent;
-  border: 4px solid #2257ca;
-  border-radius: 4px;
-  transition: all 0.4s ease 0s;
-  cursor: pointer;
-  color: #2257ca;
-  margin-bottom: 4em;
-  margin: 0;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-}
-button:hover,
-button:focus {
+
+.btn-group button:hover,
+.btn-group button:focus {
   background: #2257ca;
   color: #fff;
-}
+} 
 div.list-group-item {
   font-size: 18px;
   font-weight: 200;
