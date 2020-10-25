@@ -2,7 +2,7 @@
   <div>
     <div class="btn-group" v-if="!isEditing">
         <input type="checkbox" v-model="element.shouldPlay" />
-        <label class="edit-label">Include when played</label>
+        <label class="edit-label">Play</label>
         <button type="button" class="btn" @click="deleteLine(element.id)">
         Delete
       </button>
@@ -61,5 +61,9 @@ input[type="text"] {
   grid-row: 1;
   background-color: #87169e;
   color: white;
+}
+div {
+  display: inline;
+  margin-left: 5em;
 }
 </style>

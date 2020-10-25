@@ -5,7 +5,9 @@
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
       </button>
-      <button type="button" class="play" v-else @click="stopPlaying">Stop</button>
+      <button type="button" class="play" v-else @click="stopPlaying">
+        Stop
+      </button>
       <button
         class="edit"
         @click="toggleToItemEditForm"
@@ -16,14 +18,20 @@
       </button>
       <button type="button" v-else class="edit" @click="editDone">Done</button>
     </div>
-    <draggable :list="list" :move="checkMove" class="list-group">
+    <draggable
+      handle=".my-handle"
+      ghost-class="ghost"
+      :list="list"
+      :move="checkMove"
+      class="list-group"
+    >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        {{ element.name }}
-        <audio-edit
-          :isEditing="isEditing"
-          :element="element"
-          @delete-line="deletion"
-        />
+        <span class="my-handle">{{ element.name }}</span>
+          <audio-edit
+            :isEditing="isEditing"
+            :element="element"
+            @delete-line="deletion"
+          />
       </div>
     </draggable>
   </div>
@@ -86,7 +94,7 @@ export default {
 </script>
 <style scoped>
 .btn-group button {
-  width:50%;
+  width: 50%;
   font-size: 18px;
   font-weight: 200;
   padding: 1em;
@@ -104,13 +112,13 @@ export default {
 .btn-group button:focus {
   background: #2257ca;
   color: #fff;
-} 
+}
 div.list-group-item {
   font-size: 18px;
   font-weight: 200;
   font-family: helvetica;
   padding: 1em;
-  width: 500px;
+  width: 50%;
   background: transparent;
   border: 4px solid #87169e;
   border-radius: 4px;
@@ -122,5 +130,14 @@ div.list-group-item {
   left: 50%;
   transform: translate(-50%, -50%);
   overflow: auto;
+}
+
+.ghost {
+  opacity: 0.5;
+}
+
+.my-handle {
+  cursor: move;
+  cursor: -webkit-grabbing;
 }
 </style>
