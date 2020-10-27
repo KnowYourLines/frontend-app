@@ -26,7 +26,7 @@
       class="list-group"
     >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        <span class="my-handle">{{ element.name }}</span>
+        <span class="my-handle">{{ element.name }} Cue: {{element.cue}}</span>
           <audio-edit
             :isEditing="isEditing"
             :element="element"
@@ -69,6 +69,7 @@ export default {
       this.list.push({
         name: line["character"],
         recording: line["recording"],
+        cue: line["cue"],
         id: uniqueId("line-"),
         shouldPlay: true,
       });

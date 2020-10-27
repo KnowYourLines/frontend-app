@@ -1,7 +1,14 @@
 <template>
   <div>
     <input type="text" autocomplete="on" v-model.lazy.trim="character" />
-    <button v-if="!isRecording" @click="recordAudio" type="button">
+    <button
+      v-if="!isRecording"
+      @click="
+        recordAudio();
+        transcribeSpeech();
+      "
+      type="button"
+    >
       Record
     </button>
     <button v-else @click="stop" type="button">Stop</button>
@@ -12,7 +19,11 @@
 export default {
   name: "AudioRecorder",
   data() {
-    return { isRecording: false, character: "Character name" };
+    return {
+      isRecording: false,
+      character: "Character name",
+      cue: "",
+    };
   },
   methods: {
     recordAudio() {
@@ -31,14 +42,32 @@ export default {
     stop() {
       this.isRecording = false;
       this.recorder.stop();
+      this.recognition.stop();
       this.audioData = new Blob(this.dataArray, { type: "audio/wav" });
+      this.recognition.onend = function () {
+        this.$emit("recording-done", {
+          character: this.character,
+          recording: this.audioData,
+          cue: this.cue,
+        });
+      }.bind(this);
       this.audioSrc = window.URL.createObjectURL(this.audioData);
-      this.$emit("recording-done", {
-        character: this.character,
-        recording: this.audioData,
-      });
       let clip = new Audio(this.audioSrc);
       clip.play();
+    },
+    transcribeSpeech() {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (typeof SpeechRecognition !== "undefined") {
+        this.recognition = new SpeechRecognition();
+        this.recognition.lang = "en-US";
+        this.recognition.interimResults = false;
+        this.recognition.continuous = true;
+        this.recognition.start();
+        this.recognition.onresult = function (event) {
+          this.cue = event.results[event.results.length - 1][0].transcript;
+        }.bind(this);
+      }
     },
   },
 };
