@@ -2,11 +2,17 @@
   <div>
     <audio-recorder @recording-done="recordingDone" />
     <select v-model="selectedCharacters" multiple>
-      <option v-for="line in uniqCharacters" :key="line.name">
-        {{ line.name }}
+      <option v-for="name in uniqCharacters" :key="name">
+        {{ name }}
       </option>
     </select>
     <span>Selected: {{ selectedCharacters }}</span>
+    <button type="button" class="btn" @click="muteSelected">
+      Mute Selected
+    </button>
+    <button type="button" class="btn" @click="unmuteSelected">
+      Unmute Selected
+    </button>
     <div class="btn-group">
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
@@ -71,7 +77,7 @@ export default {
   },
   computed: {
     uniqCharacters() {
-      return uniqBy(this.list, "name");
+      return uniqBy(this.list, "name").map((line) => line.name);
     },
   },
   methods: {
@@ -102,6 +108,20 @@ export default {
     },
     editDone() {
       this.isEditing = false;
+    },
+    muteSelected() {
+      this.list.forEach((line) => {
+        if (this.selectedCharacters.includes(line.name)) {
+          line.shouldPlay = false;
+        }
+      });
+    },
+    unmuteSelected() {
+      this.list.forEach((line) => {
+        if (this.selectedCharacters.includes(line.name))  {
+          line.shouldPlay = true;
+        }
+      });
     },
   },
 };
