@@ -1,6 +1,12 @@
 <template>
   <div>
     <audio-recorder @recording-done="recordingDone" />
+    <select v-model="selectedCharacters" multiple>
+      <option v-for="line in uniqCharacters" :key="line.name">
+        {{ line.name }}
+      </option>
+    </select>
+    <span>Selected: {{ selectedCharacters }}</span>
     <div class="btn-group">
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
@@ -26,12 +32,12 @@
       class="list-group"
     >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        <span class="my-handle">{{ element.name }} Cue: {{element.cue}}</span>
-          <audio-edit
-            :isEditing="isEditing"
-            :element="element"
-            @delete-line="deletion"
-          />
+        <span class="my-handle">{{ element.name }} Cue: {{ element.cue }}</span>
+        <audio-edit
+          :isEditing="isEditing"
+          :element="element"
+          @delete-line="deletion"
+        />
       </div>
     </draggable>
   </div>
@@ -42,6 +48,7 @@ import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
 import AudioEdit from "./AudioEdit";
 import uniqueId from "lodash.uniqueid";
+import uniqBy from "lodash.uniqby";
 export default {
   name: "AudioList",
   components: {
@@ -53,12 +60,18 @@ export default {
     return {
       list: [],
       isEditing: false,
+      selectedCharacters: [],
     };
   },
   props: {
     isPlaying: {
       type: Boolean,
       required: true,
+    },
+  },
+  computed: {
+    uniqCharacters() {
+      return uniqBy(this.list, "name");
     },
   },
   methods: {
