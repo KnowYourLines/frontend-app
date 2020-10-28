@@ -7,6 +7,7 @@
       </option>
     </select>
     <span>Selected: {{ selectedCharacters }}</span>
+    <div class="button-group" v-if="!isPlaying">
     <button type="button" class="btn" @click="muteSelected">
       Mute Selected
     </button>
@@ -16,6 +17,7 @@
     <button type="button" class="btn" v-if="!isPlaying" @click="playCharacters">
       Play and listen for selected cues
     </button>
+    </div>
     <div class="btn-group">
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
@@ -36,6 +38,7 @@
     <draggable
       handle=".my-handle"
       ghost-class="ghost"
+      :disabled="isPlaying"
       :list="list"
       :move="checkMove"
       class="list-group"
