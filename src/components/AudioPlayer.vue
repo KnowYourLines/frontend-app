@@ -118,13 +118,13 @@ export default {
                           this.player.src = window.URL.createObjectURL(line);
                           this.player.play();
                         }
+                      } else {
+                        index = 0;
+                        console.log("restart");
+                        line = recordings_to_play[index]["recording"];
+                        this.player.src = window.URL.createObjectURL(line);
+                        this.player.play();
                       }
-                    } else {
-                      index = 0;
-                      console.log("restart");
-                      line = recordings_to_play[index]["recording"];
-                      this.player.src = window.URL.createObjectURL(line);
-                      this.player.play();
                     }
                   }.bind(this);
                 }
