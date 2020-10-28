@@ -13,22 +13,25 @@
     <button type="button" class="btn" @click="unmuteSelected">
       Unmute Selected
     </button>
+    <button type="button" class="btn" v-if="!isPlaying" @click="playCharacters">
+      Play and listen for selected cues
+    </button>
     <div class="btn-group">
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
       </button>
-      <button type="button" class="play" v-else @click="stopPlaying">
+      <button type="button" class="play" v-else @click="$emit('stop-playing')">
         Stop
       </button>
       <button
         class="edit"
         @click="toggleToItemEditForm"
-        v-if="!isEditing"
+        v-if="!isEditing && !isPlaying"
         type="button"
       >
         Edit
       </button>
-      <button type="button" v-else class="edit" @click="editDone">Done</button>
+      <button type="button" v-else-if="isEditing" class="edit" @click="editDone">Done</button>
     </div>
     <draggable
       handle=".my-handle"
@@ -41,6 +44,7 @@
         <span class="my-handle">{{ element.name }} Cue: {{ element.cue }}</span>
         <audio-edit
           :isEditing="isEditing"
+          :isPlaying="isPlaying"
           :element="element"
           @delete-line="deletion"
         />
@@ -96,8 +100,8 @@ export default {
     playNonstop: function () {
       this.$emit("play-nonstop", this.list);
     },
-    stopPlaying: function () {
-      this.$emit("stop-playing");
+    playCharacters: function () {
+      this.$emit("play-on-cue", this.list, this.selectedCharacters);
     },
     deletion(lineId) {
       const lineIndex = this.list.findIndex((line) => line.id === lineId);
