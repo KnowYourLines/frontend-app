@@ -104,8 +104,10 @@ export default {
                   this.recognition.onresult = function (event) {
                     this.cue =
                       event.results[event.results.length - 1][0].transcript;
+                      console.log(line_cue)
+                      console.log(this.cue)
                     // look for last word or specific cue?
-                    if (this.cue == line_cue) {
+                    if (this.cue.trim() == line_cue.trim()) {
                       console.log("hooray");
                       if (index < recordings_to_play.length - 1) {
                         console.log("next");
