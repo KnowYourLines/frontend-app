@@ -14,6 +14,7 @@
 #### Cleanup
 - [ ] Restyle list, edit 
 - [ ] Refactor player
+- [ ] Deploy on heroku
 
 #### Backend integration
 - [ ] Register
