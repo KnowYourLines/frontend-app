@@ -104,8 +104,8 @@ export default {
                   this.recognition.onresult = function (event) {
                     this.cue =
                       event.results[event.results.length - 1][0].transcript;
-                      console.log(line_cue)
-                      console.log(this.cue)
+                    console.log(line_cue);
+                    console.log(this.cue);
                     // look for last word or specific cue?
                     if (this.cue.trim() == line_cue.trim()) {
                       console.log("hooray");
@@ -139,13 +139,65 @@ export default {
           }.bind(this)
         );
       }
-      if (recognition_indexes[0] < 0) {
-        console.log(recognition_indexes);
-        console.log("no characters selected");
-      }
       if (recognition_indexes[0] == 0) {
-        console.log(recognition_indexes);
-        console.log("goodbye world");
+        index = 0;
+        this.recognition.start();
+        this.isPlaying = true;
+        var line_cue = recordings_to_play[index]["cue"];
+        this.recognition.onresult = function (event) {
+          this.cue = event.results[event.results.length - 1][0].transcript;
+          console.log(line_cue);
+          console.log(this.cue);
+          // look for last word or specific cue?
+          if (this.cue.trim() == line_cue.trim()) {
+            if (index < recordings_to_play.length - 1) {
+              console.log("next");
+              index++;
+              if (recognition_indexes.includes(index)) {
+                line_cue = recordings_to_play[index]["cue"];
+              } else {
+                this.recognition.stop();
+                line = recordings_to_play[index]["recording"];
+                this.player = new Audio();
+                this.player.src = window.URL.createObjectURL(line);
+                this.player.play();
+                this.player.addEventListener(
+                  "ended",
+                  function () {
+                    index++;
+                    if (index == recordings_to_play.length) {
+                      index = 0;
+                      recordings_to_play = recordings.filter(
+                        (recording) => recording.shouldPlay
+                      );
+                      recognition_indexes = OnCueIndexes(
+                        recordings_to_play,
+                        characters
+                      );
+                      line_cue = recordings_to_play[index]["cue"];
+                      console.log("restart");
+                      this.recognition.start();
+                    }
+
+                    if (recognition_indexes.includes(index)) {
+                      this.recognition.start();
+                      line_cue = recordings_to_play[index]["cue"];
+                    } else {
+                      line = recordings_to_play[index]["recording"];
+                      this.player.src = window.URL.createObjectURL(line);
+                      this.player.play();
+                    }
+                  }.bind(this)
+                );
+              }
+            } else {
+              index = 0;
+              line_cue = recordings_to_play[index]["cue"];
+              console.log("restart");
+              this.recognition.start();
+            }
+          }
+        }.bind(this);
       }
     },
   },
