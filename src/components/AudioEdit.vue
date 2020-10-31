@@ -7,7 +7,7 @@
         Delete
       </button>
     </div>
-    <div v-else-if="isEditing">
+    <div v-else-if="isEditing && !isPlaying">
       <label class="edit-label">Edit name: </label>
       <input type="text" autocomplete="on" v-model.lazy.trim="element.name" />
       <label class="edit-label">Edit cue: </label>

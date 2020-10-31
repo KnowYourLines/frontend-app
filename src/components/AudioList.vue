@@ -9,10 +9,10 @@
     <span>Selected: {{ selectedCharacters }}</span>
     <div class="button-group" v-if="!isPlaying">
     <button type="button" class="btn" @click="muteSelected">
-      Mute Selected
+      Skip Selected
     </button>
     <button type="button" class="btn" @click="unmuteSelected">
-      Unmute Selected
+      Unskip Selected
     </button>
     <button type="button" class="btn" v-if="!isPlaying" @click="playCharacters">
       Play and listen for selected cues
@@ -33,7 +33,7 @@
       >
         Edit
       </button>
-      <button type="button" v-else-if="isEditing" class="edit" @click="editDone">Done</button>
+      <button type="button" v-else-if="isEditing && !isPlaying" class="edit" @click="editDone">Done</button>
     </div>
     <draggable
       handle=".my-handle"
