@@ -53,6 +53,10 @@ export default {
     },
     pause: function () {
       this.isPlaying = false;
+      this.recognition.abort();
+      this.recognition.onend = function () {
+        this.recognition.abort();
+      }.bind(this);
       this.player.pause();
       this.recognition.onresult = function (){
         this.recognition.abort()
@@ -173,6 +177,7 @@ export default {
                   this.recognition.start();
                 }.bind(this);
                 line_cue = recordings_to_play[index]["cue"];
+                console.log("here");
               } else {
                 line = recordings_to_play[index]["recording"];
                 this.player = new Audio();
@@ -208,12 +213,12 @@ export default {
                 );
               }
             } else {
-              index = 0;
-              line_cue = recordings_to_play[index]["cue"];
               console.log("restart");
               this.recognition.onend = function () {
                 this.recognition.start();
               }.bind(this);
+              index = 0;
+              line_cue = recordings_to_play[index]["cue"];
             }
           }
         }.bind(this);
