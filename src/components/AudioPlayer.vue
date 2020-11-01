@@ -54,7 +54,9 @@ export default {
     pause: function () {
       this.isPlaying = false;
       this.player.pause();
-      this.recognition.abort()
+      this.recognition.onresult = function (){
+        this.recognition.abort()
+      }.bind(this)
     },
     playOnCue: function (recordings, characters) {
       var recordings_to_play = recordings.filter(
@@ -106,7 +108,6 @@ export default {
                     this.cue = event.results[event.resultIndex][0].transcript;
                     console.log(line_cue);
                     console.log(this.cue);
-                    // look for last word or specific cue?
                     if (
                       this.cue
                         .trim()
@@ -157,7 +158,6 @@ export default {
           this.cue = event.results[event.resultIndex][0].transcript;
           console.log(line_cue);
           console.log(this.cue);
-          // look for last word or specific cue?
           if (
             this.cue
               .trim()
@@ -174,7 +174,6 @@ export default {
                 }.bind(this);
                 line_cue = recordings_to_play[index]["cue"];
               } else {
-                this.recognition.abort();
                 line = recordings_to_play[index]["recording"];
                 this.player = new Audio();
                 this.player.src = window.URL.createObjectURL(line);
@@ -198,8 +197,8 @@ export default {
                     }
 
                     if (recognition_indexes.includes(index)) {
-                      this.recognition.start();
                       line_cue = recordings_to_play[index]["cue"];
+                      this.recognition.start();
                     } else {
                       line = recordings_to_play[index]["recording"];
                       this.player.src = window.URL.createObjectURL(line);
@@ -212,7 +211,9 @@ export default {
               index = 0;
               line_cue = recordings_to_play[index]["cue"];
               console.log("restart");
-              this.recognition.start();
+              this.recognition.onend = function () {
+                this.recognition.start();
+              }.bind(this);
             }
           }
         }.bind(this);
