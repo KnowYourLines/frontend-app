@@ -66,7 +66,7 @@ export default {
       if (typeof SpeechRecognition !== "undefined") {
         this.recognition = new SpeechRecognition();
         this.recognition.lang = "en-US";
-        this.recognition.interimResults = false;
+        this.recognition.interimResults = true;
         this.recognition.continuous = true;
       }
       if (recognition_indexes[0] > 0) {
@@ -102,21 +102,25 @@ export default {
                   this.recognition.start();
                   var line_cue = recordings_to_play[index]["cue"];
                   this.recognition.onresult = function (event) {
-                    this.cue =
-                      event.results[event.resultIndex][0].transcript;
+                    this.cue = event.results[event.resultIndex][0].transcript;
                     console.log(line_cue);
                     console.log(this.cue);
                     // look for last word or specific cue?
-                    if (this.cue.trim().toLowerCase().includes(line_cue.trim().toLowerCase())) {
+                    if (
+                      this.cue
+                        .trim()
+                        .toLowerCase()
+                        .includes(line_cue.trim().toLowerCase())
+                    ) {
                       console.log("hooray");
-                      this.recognition.abort()
+                      this.recognition.abort();
                       if (index < recordings_to_play.length - 1) {
                         console.log("next");
                         index++;
                         if (recognition_indexes.includes(index)) {
-                          this.recognition.onend = function() {
-                            this.recognition.start()
-                          }.bind(this)
+                          this.recognition.onend = function () {
+                            this.recognition.start();
+                          }.bind(this);
                           line_cue = recordings_to_play[index]["cue"];
                         } else {
                           this.recognition.abort();
@@ -149,18 +153,27 @@ export default {
         this.isPlaying = true;
         var line_cue = recordings_to_play[index]["cue"];
         this.recognition.onresult = function (event) {
-          this.cue = event.results[event.results.length - 1][0].transcript;
+          this.cue = event.results[event.resultIndex][0].transcript;
           console.log(line_cue);
           console.log(this.cue);
           // look for last word or specific cue?
-          if (this.cue.trim() == line_cue.trim()) {
+          if (
+            this.cue
+              .trim()
+              .toLowerCase()
+              .includes(line_cue.trim().toLowerCase())
+          ) {
+            this.recognition.abort();
             if (index < recordings_to_play.length - 1) {
               console.log("next");
               index++;
               if (recognition_indexes.includes(index)) {
+                this.recognition.onend = function () {
+                  this.recognition.start();
+                }.bind(this);
                 line_cue = recordings_to_play[index]["cue"];
               } else {
-                this.recognition.stop();
+                this.recognition.abort();
                 line = recordings_to_play[index]["recording"];
                 this.player = new Audio();
                 this.player.src = window.URL.createObjectURL(line);

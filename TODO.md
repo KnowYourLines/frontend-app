@@ -2,8 +2,7 @@
 
 #### Speech recognition
 - [ ] Detect cue phrase on record
-- [ ] Listen for includes trimmed and decapitalized cue on cue playback
-- [ ] Use interim results and optionally final for record and cue playback (define interim transcript that is reset on recognition)
+- [ ] Use interim results for record 
 
 #### UI
 - [ ] Only render stop button when playing and relevant computed properties
