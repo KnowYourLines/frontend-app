@@ -54,6 +54,7 @@ export default {
     pause: function () {
       this.isPlaying = false;
       this.player.pause();
+      this.recognition.abort()
     },
     playOnCue: function (recordings, characters) {
       var recordings_to_play = recordings.filter(
