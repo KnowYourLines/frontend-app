@@ -48,8 +48,9 @@ export default {
         this.$emit("recording-done", {
           character: this.character,
           recording: this.audioData,
-          cue: this.cue,
+          cue: findShortestCue(this.cue),
         });
+        this.cue = "";
       }.bind(this);
       this.audioSrc = window.URL.createObjectURL(this.audioData);
       let clip = new Audio(this.audioSrc);
@@ -66,13 +67,29 @@ export default {
         this.recognition.start();
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
-          console.log(this.cue)
-          console.log(event.results[event.resultIndex].isFinal)
         }.bind(this);
       }
     },
   },
 };
+function findShortestCue(cue) {
+  var words = cue.split(" ");
+  var possible_cue = "";
+  for (var i = words.length - 1; i > -1; i--) {
+    possible_cue = words[i] + " " + possible_cue;
+    var remaining = words.slice(0, i).join(" ");
+    if (!isRepeated(remaining, possible_cue)) {
+      return possible_cue;
+    }
+  }
+  return possible_cue;
+}
+function isRepeated(remaining_text, candidate) {
+  candidate = candidate.trim().toLowerCase();
+  return (
+    remaining_text.includes(candidate) || candidate.includes(remaining_text)
+  );
+}
 </script>
 <style scoped>
 button {
