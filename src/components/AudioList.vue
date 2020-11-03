@@ -1,11 +1,12 @@
 <template>
   <div>
     <audio-recorder @recording-done="recordingDone" />
-    <select v-model="selectedCharacters" multiple>
-      <option v-for="name in uniqCharacters" :key="name">
-        {{ name }}
-      </option>
-    </select>
+    <div class="container">
+      <div v-for="name in uniqCharacters" :key="name">
+        <input type="checkbox" v-model="selectedCharacters" :value="name" />
+        <label>{{ name }}</label>
+      </div>
+    </div>
     <span>Selected: {{ selectedCharacters }}</span>
     <div class="button-group" v-if="!isPlaying">
       <button type="button" class="btn" @click="muteSelected">
@@ -146,13 +147,12 @@ export default {
 };
 </script>
 <style scoped>
-option:before {
-  content: "☐ ";
+.container {
+  border: 2px solid #ccc;
+  width: 300px;
+  height: 100px;
+  overflow-y: scroll;
 }
-option:checked:before {
-  content: "☑ ";
-}
-
 .btn-group button {
   width: 50%;
   font-size: 18px;
