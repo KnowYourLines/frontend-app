@@ -61,11 +61,13 @@ export default {
       if (typeof SpeechRecognition !== "undefined") {
         this.recognition = new SpeechRecognition();
         this.recognition.lang = "en-US";
-        this.recognition.interimResults = false;
+        this.recognition.interimResults = true;
         this.recognition.continuous = true;
         this.recognition.start();
         this.recognition.onresult = function (event) {
-          this.cue = event.results[event.results.length - 1][0].transcript;
+          this.cue = event.results[event.resultIndex][0].transcript;
+          console.log(this.cue)
+          console.log(event.results[event.resultIndex].isFinal)
         }.bind(this);
       }
     },

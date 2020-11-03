@@ -2,7 +2,6 @@
 
 #### Speech recognition
 - [ ] Detect cue phrase on record
-- [ ] Use interim results for record 
 
 #### UI
 - [ ] Only render stop button when playing and relevant computed properties
