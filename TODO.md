@@ -1,8 +1,5 @@
 ### Todo
 
-#### Speech recognition
-- [ ] Detect cue phrase on record
-
 #### UI
 - [ ] Only render stop button when playing and relevant computed properties
 - [ ] Handle no speech recognition in browser by computed property
