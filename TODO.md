@@ -1,9 +1,10 @@
 ### Todo
 
 #### UI
-- [ ] Only render stop button when playing and relevant computed properties
+- [ ] Only render record/stop button when not playing
 - [ ] Handle no speech recognition in browser by computed property
-- [ ] Highlight line waiting for and hint cue by computed property
+- [ ] Highlight cue listening for by computed property
+- [ ] Highlight what is heard by computed property
 - [ ] Notify if draggable by computed property
 
 #### Cleanup

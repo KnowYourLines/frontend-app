@@ -8,15 +8,20 @@
     </select>
     <span>Selected: {{ selectedCharacters }}</span>
     <div class="button-group" v-if="!isPlaying">
-    <button type="button" class="btn" @click="muteSelected">
-      Skip Selected
-    </button>
-    <button type="button" class="btn" @click="unmuteSelected">
-      Unskip Selected
-    </button>
-    <button type="button" class="btn" v-if="!isPlaying" @click="playCharacters">
-      Play and listen for selected cues
-    </button>
+      <button type="button" class="btn" @click="muteSelected">
+        Skip Selected
+      </button>
+      <button type="button" class="btn" @click="unmuteSelected">
+        Unskip Selected
+      </button>
+      <button
+        type="button"
+        class="btn"
+        v-if="!isPlaying"
+        @click="playCharacters"
+      >
+        Play and listen for selected cues
+      </button>
     </div>
     <div class="btn-group">
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
@@ -33,7 +38,14 @@
       >
         Edit
       </button>
-      <button type="button" v-else-if="isEditing && !isPlaying" class="edit" @click="editDone">Done</button>
+      <button
+        type="button"
+        v-else-if="isEditing && !isPlaying"
+        class="edit"
+        @click="editDone"
+      >
+        Done
+      </button>
     </div>
     <draggable
       handle=".my-handle"
@@ -125,7 +137,7 @@ export default {
     },
     unmuteSelected() {
       this.list.forEach((line) => {
-        if (this.selectedCharacters.includes(line.name))  {
+        if (this.selectedCharacters.includes(line.name)) {
           line.shouldPlay = true;
         }
       });
@@ -134,6 +146,13 @@ export default {
 };
 </script>
 <style scoped>
+option:before {
+  content: "☐ ";
+}
+option:checked:before {
+  content: "☑ ";
+}
+
 .btn-group button {
   width: 50%;
   font-size: 18px;

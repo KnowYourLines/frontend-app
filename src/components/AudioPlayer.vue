@@ -53,14 +53,11 @@ export default {
     },
     pause: function () {
       this.isPlaying = false;
+      this.player.pause();
       this.recognition.abort();
       this.recognition.onend = function () {
         this.recognition.abort();
       }.bind(this);
-      this.player.pause();
-      this.recognition.onresult = function (){
-        this.recognition.abort()
-      }.bind(this)
     },
     playOnCue: function (recordings, characters) {
       var recordings_to_play = recordings.filter(
@@ -177,7 +174,6 @@ export default {
                   this.recognition.start();
                 }.bind(this);
                 line_cue = recordings_to_play[index]["cue"];
-                console.log("here");
               } else {
                 line = recordings_to_play[index]["recording"];
                 this.player = new Audio();
