@@ -1,6 +1,6 @@
 <template>
   <div>
-    <audio-recorder @recording-done="recordingDone" />
+    <audio-recorder :isPlaying="isPlaying" @recording-done="recordingDone" />
     <div class="container">
       <div v-for="name in uniqCharacters" :key="name">
         <input type="checkbox" v-model="selectedCharacters" :value="name" />

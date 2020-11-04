@@ -1,7 +1,6 @@
 ### Todo
 
 #### UI
-- [ ] Only render record/stop button when not playing
 - [ ] Handle no speech recognition in browser by computed property
 - [ ] Highlight cue listening for by computed property
 - [ ] Highlight what is heard by computed property
