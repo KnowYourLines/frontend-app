@@ -57,7 +57,7 @@
       class="list-group"
     >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        <span class="my-handle">{{ element.name }} Cue: {{ element.cue }}</span>
+        <span class="my-handle"> <img v-if="!isPlaying" src="..\assets\reorder.png"> {{ element.name }} Cue: {{ element.cue }}</span>
         <audio-edit
           :isEditing="isEditing"
           :isPlaying="isPlaying"
