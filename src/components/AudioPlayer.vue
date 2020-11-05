@@ -6,7 +6,7 @@
       @stop-playing="pause"
       @play-on-cue="playOnCue"
     />
-    <h2 v-if="isPlaying">{{ characterPrompt }}</h2>
+    <h2 v-if="isPlaying">{{characterPrompt}}</h2>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       isPlaying: false,
-      characterPrompt: "",
+      characterPrompt: ''
     };
   },
   methods: {
@@ -30,8 +30,7 @@ export default {
       );
       var index = 0;
       var line = recordings_to_play[index]["recording"];
-      this.characterPrompt =
-        "Playing for: " + recordings_to_play[index]["name"];
+      this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
       this.player = new Audio();
       this.player.src = window.URL.createObjectURL(line);
       this.player.play();
@@ -46,13 +45,11 @@ export default {
               (recording) => recording.shouldPlay
             );
             this.isPlaying = !(recordings_to_play.length == 0);
-            this.characterPrompt =
-              "Playing for: " + recordings_to_play[index]["name"];
+            this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
           }
           if (index < recordings_to_play.length) {
             line = recordings_to_play[index]["recording"];
-            this.characterPrompt =
-              "Playing for: " + recordings_to_play[index]["name"];
+            this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
             this.player.src = window.URL.createObjectURL(line);
             this.player.play();
           }
@@ -84,8 +81,7 @@ export default {
       if (recognition_indexes[0] > 0) {
         var index = 0;
         var line = recordings_to_play[index]["recording"];
-        this.characterPrompt =
-          "Playing for: " + recordings_to_play[index]["name"];
+        this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
         this.player = new Audio();
         this.player.src = window.URL.createObjectURL(line);
         this.player.play();
@@ -115,8 +111,7 @@ export default {
                   this.recognition.continuous = true;
                   this.recognition.start();
                   var line_cue = recordings_to_play[index]["cue"];
-                  this.characterPrompt =
-                    "Listening for: " + recordings_to_play[index]["name"];
+                  this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
                   this.recognition.onresult = function (event) {
                     this.cue = event.results[event.resultIndex][0].transcript;
                     console.log(line_cue);
@@ -137,14 +132,11 @@ export default {
                             this.recognition.start();
                           }.bind(this);
                           line_cue = recordings_to_play[index]["cue"];
-                          this.characterPrompt =
-                            "Listening for: " +
-                            recordings_to_play[index]["name"];
+                          this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
                         } else {
                           this.recognition.abort();
                           line = recordings_to_play[index]["recording"];
-                          this.characterPrompt =
-                            "Playing for: " + recordings_to_play[index]["name"];
+                          this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                           this.player.src = window.URL.createObjectURL(line);
                           this.player.play();
                         }
@@ -152,9 +144,7 @@ export default {
                         index = 0;
                         console.log("restart");
                         line = recordings_to_play[index]["recording"];
-                        this.characterPrompt =
-                          "Restart...playing for: " +
-                          recordings_to_play[index]["name"];
+                        this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                         this.player.src = window.URL.createObjectURL(line);
                         this.player.play();
                       }
@@ -163,8 +153,7 @@ export default {
                 }
               } else {
                 line = recordings_to_play[index]["recording"];
-                this.characterPrompt =
-                  "Playing for: " + recordings_to_play[index]["name"];
+                this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                 this.player.src = window.URL.createObjectURL(line);
                 this.player.play();
               }
@@ -177,8 +166,7 @@ export default {
         this.recognition.start();
         this.isPlaying = true;
         var line_cue = recordings_to_play[index]["cue"];
-        this.characterPrompt =
-          "Listening for: " + recordings_to_play[index]["name"];
+        this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
           console.log(line_cue);
@@ -198,12 +186,10 @@ export default {
                   this.recognition.start();
                 }.bind(this);
                 line_cue = recordings_to_play[index]["cue"];
-                this.characterPrompt =
-                  "Listening for: " + recordings_to_play[index]["name"];
+                this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
               } else {
                 line = recordings_to_play[index]["recording"];
-                this.characterPrompt =
-                  "Playing for: " + recordings_to_play[index]["name"];
+                this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                 this.player = new Audio();
                 this.player.src = window.URL.createObjectURL(line);
                 this.player.play();
@@ -221,29 +207,18 @@ export default {
                         characters
                       );
                       line_cue = recordings_to_play[index]["cue"];
+                      this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
                       console.log("restart");
                       this.recognition.start();
-                      this.recognition.onstart = function () {
-                        this.characterPrompt =
-                          "Restart...listening for: " +
-                          recordings_to_play[index]["name"];
-                      }.bind(this);
-                      this.player.onended = function () {
-                        this.characterPrompt =
-                          "Restart...listening for: " +
-                          recordings_to_play[index]["name"];
-                      }.bind(this);
                     }
 
                     if (recognition_indexes.includes(index)) {
                       line_cue = recordings_to_play[index]["cue"];
-                      this.characterPrompt =
-                        "Listening for: " + recordings_to_play[index]["name"];
+                      this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
                       this.recognition.start();
                     } else {
                       line = recordings_to_play[index]["recording"];
-                      this.characterPrompt =
-                        "Playing for: " + recordings_to_play[index]["name"];
+                      this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                       this.player.src = window.URL.createObjectURL(line);
                       this.player.play();
                     }
@@ -257,8 +232,7 @@ export default {
               }.bind(this);
               index = 0;
               line_cue = recordings_to_play[index]["cue"];
-              this.characterPrompt =
-                "Restart...listening for: " + recordings_to_play[index]["name"];
+              this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
             }
           }
         }.bind(this);
