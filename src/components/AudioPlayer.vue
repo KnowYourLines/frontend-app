@@ -207,7 +207,7 @@ export default {
                         characters
                       );
                       line_cue = recordings_to_play[index]["cue"];
-                      this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
+                      this.characterPrompt = 'Restart...listening for: ' + recordings_to_play[index]["name"]
                       console.log("restart");
                       this.recognition.start();
                     }
@@ -232,7 +232,6 @@ export default {
               }.bind(this);
               index = 0;
               line_cue = recordings_to_play[index]["cue"];
-              this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
             }
           }
         }.bind(this);
