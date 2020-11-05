@@ -166,6 +166,7 @@ export default {
         this.recognition.start();
         this.isPlaying = true;
         var line_cue = recordings_to_play[index]["cue"];
+        this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
           console.log(line_cue);
@@ -185,8 +186,10 @@ export default {
                   this.recognition.start();
                 }.bind(this);
                 line_cue = recordings_to_play[index]["cue"];
+                this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
               } else {
                 line = recordings_to_play[index]["recording"];
+                this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                 this.player = new Audio();
                 this.player.src = window.URL.createObjectURL(line);
                 this.player.play();
@@ -204,15 +207,18 @@ export default {
                         characters
                       );
                       line_cue = recordings_to_play[index]["cue"];
+                      this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
                       console.log("restart");
                       this.recognition.start();
                     }
 
                     if (recognition_indexes.includes(index)) {
                       line_cue = recordings_to_play[index]["cue"];
+                      this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
                       this.recognition.start();
                     } else {
                       line = recordings_to_play[index]["recording"];
+                      this.characterPrompt = 'Playing for: ' + recordings_to_play[index]["name"]
                       this.player.src = window.URL.createObjectURL(line);
                       this.player.play();
                     }
@@ -226,6 +232,7 @@ export default {
               }.bind(this);
               index = 0;
               line_cue = recordings_to_play[index]["cue"];
+              this.characterPrompt = 'Listening for: ' + recordings_to_play[index]["name"]
             }
           }
         }.bind(this);

@@ -9,7 +9,7 @@
 - [ ] Only render Stop button/Player html when playing
 
 #### Cleanup
-- [ ] Restyle list, edit 
+- [ ] Restyle list, edit, player 
 - [ ] Refactor player
 - [ ] Deploy on heroku
 
