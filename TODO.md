@@ -1,7 +1,6 @@
 ### Todo
 
 #### UI
-- [ ] Render character playing/listening for by computed property (Player)
 - [ ] Render what is heard by computed property (Player)
 - [ ] Render cues by computed property (Player)
 - [ ] Handle no speech recognition in browser by computed property (Player/Recorder)
