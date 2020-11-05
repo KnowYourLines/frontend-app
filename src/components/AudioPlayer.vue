@@ -6,6 +6,7 @@
       @stop-playing="pause"
       @play-on-cue="playOnCue"
     />
+    <h2 v-if="isPlaying">{{characterPrompt}}</h2>
   </div>
 </template>
 
@@ -19,6 +20,7 @@ export default {
   data() {
     return {
       isPlaying: false,
+      characterPrompt: ''
     };
   },
   methods: {
@@ -28,6 +30,7 @@ export default {
       );
       var index = 0;
       var line = recordings_to_play[index]["recording"];
+      this.characterPrompt = 'Playing line for: ' + recordings_to_play[index]["name"]
       this.player = new Audio();
       this.player.src = window.URL.createObjectURL(line);
       this.player.play();
@@ -42,9 +45,11 @@ export default {
               (recording) => recording.shouldPlay
             );
             this.isPlaying = !(recordings_to_play.length == 0);
+            this.characterPrompt = 'Playing line for: ' + recordings_to_play[index]["name"]
           }
           if (index < recordings_to_play.length) {
             line = recordings_to_play[index]["recording"];
+            this.characterPrompt = 'Playing line for: ' + recordings_to_play[index]["name"]
             this.player.src = window.URL.createObjectURL(line);
             this.player.play();
           }
