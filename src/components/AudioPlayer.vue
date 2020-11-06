@@ -6,7 +6,7 @@
       @stop-playing="pause"
       @play-on-cue="playOnCue"
     />
-    <h2 v-if="isPlaying">{{ characterPrompt }}</h2>
+    <h2 v-if="isPlaying">{{ characterPrompt }}<br />{{ speechHeard }}</h2>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
     return {
       isPlaying: false,
       characterPrompt: "",
+      speechHeard: "",
     };
   },
   methods: {
@@ -61,7 +62,11 @@ export default {
     },
     pause: function () {
       this.isPlaying = false;
-      this.player.pause();
+      this.characterPrompt = ""
+      this.speechHeard = ""
+      if (typeof this.player !== "undefined") {
+        this.player.pause();
+      }
       this.recognition.abort();
       this.recognition.onend = function () {
         this.recognition.abort();
@@ -119,6 +124,7 @@ export default {
                     "Listening for: " + recordings_to_play[index]["name"];
                   this.recognition.onresult = function (event) {
                     this.cue = event.results[event.resultIndex][0].transcript;
+                    this.speechHeard = "Heard: " + this.cue;
                     console.log(line_cue);
                     console.log(this.cue);
                     if (
@@ -128,6 +134,7 @@ export default {
                         .includes(line_cue.trim().toLowerCase())
                     ) {
                       console.log("hooray");
+                      this.speechHeard = "";
                       this.recognition.abort();
                       if (index < recordings_to_play.length - 1) {
                         console.log("next");
@@ -187,6 +194,7 @@ export default {
           "Listening for: " + recordings_to_play[index]["name"];
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
+          this.speechHeard = "Heard: " + this.cue;
           console.log(line_cue);
           console.log(this.cue);
           if (
@@ -196,6 +204,7 @@ export default {
               .includes(line_cue.trim().toLowerCase())
           ) {
             this.recognition.abort();
+            this.speechHeard = "";
             if (index < recordings_to_play.length - 1) {
               console.log("next");
               index++;
