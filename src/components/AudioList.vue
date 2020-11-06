@@ -21,7 +21,7 @@
         v-if="!isPlaying"
         @click="playCharacters"
       >
-        Play and listen for selected cues
+        Play and listen for selected
       </button>
     </div>
     <div class="btn-group">

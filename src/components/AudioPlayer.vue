@@ -6,7 +6,9 @@
       @stop-playing="pause"
       @play-on-cue="playOnCue"
     />
-    <h2 v-if="isPlaying">{{ characterPrompt }}<br />{{ speechHeard }}</h2>
+    <h2 v-if="isPlaying">
+      {{ characterPrompt }}<br />{{ cuePrompt }}<br />{{ speechHeard }}
+    </h2>
   </div>
 </template>
 
@@ -22,6 +24,7 @@ export default {
       isPlaying: false,
       characterPrompt: "",
       speechHeard: "",
+      cuePrompt: "",
     };
   },
   methods: {
@@ -62,8 +65,9 @@ export default {
     },
     pause: function () {
       this.isPlaying = false;
-      this.characterPrompt = ""
-      this.speechHeard = ""
+      this.characterPrompt = "";
+      this.speechHeard = "";
+      this.cuePrompt = "";
       if (typeof this.player !== "undefined") {
         this.player.pause();
       }
@@ -122,6 +126,7 @@ export default {
                   var line_cue = recordings_to_play[index]["cue"];
                   this.characterPrompt =
                     "Listening for: " + recordings_to_play[index]["name"];
+                  this.cuePrompt = "Cue: " + line_cue
                   this.recognition.onresult = function (event) {
                     this.cue = event.results[event.resultIndex][0].transcript;
                     this.speechHeard = "Heard: " + this.cue;
@@ -135,6 +140,7 @@ export default {
                     ) {
                       console.log("hooray");
                       this.speechHeard = "";
+                      this.cuePrompt = "";
                       this.recognition.abort();
                       if (index < recordings_to_play.length - 1) {
                         console.log("next");
@@ -147,6 +153,8 @@ export default {
                           this.characterPrompt =
                             "Listening for: " +
                             recordings_to_play[index]["name"];
+                          this.cuePrompt =
+                            "Cue: " + line_cue;
                         } else {
                           this.recognition.abort();
                           line = recordings_to_play[index]["recording"];
@@ -192,6 +200,7 @@ export default {
         var line_cue = recordings_to_play[index]["cue"];
         this.characterPrompt =
           "Listening for: " + recordings_to_play[index]["name"];
+        this.cuePrompt = "Cue: " + line_cue;
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
           this.speechHeard = "Heard: " + this.cue;
@@ -205,6 +214,7 @@ export default {
           ) {
             this.recognition.abort();
             this.speechHeard = "";
+            this.cuePrompt = "";
             if (index < recordings_to_play.length - 1) {
               console.log("next");
               index++;
@@ -215,6 +225,7 @@ export default {
                 line_cue = recordings_to_play[index]["cue"];
                 this.characterPrompt =
                   "Listening for: " + recordings_to_play[index]["name"];
+                this.cuePrompt = "Cue: " + line_cue;
               } else {
                 line = recordings_to_play[index]["recording"];
                 this.characterPrompt =
@@ -239,6 +250,8 @@ export default {
                       this.characterPrompt =
                         "Restart...listening for: " +
                         recordings_to_play[index]["name"];
+                      this.cuePrompt =
+                        "Cue: " + line_cue;
                       console.log("restart");
                       this.recognition.start();
                     }
@@ -247,6 +260,8 @@ export default {
                       line_cue = recordings_to_play[index]["cue"];
                       this.characterPrompt =
                         "Listening for: " + recordings_to_play[index]["name"];
+                      this.cuePrompt =
+                        "Cue: " + line_cue;
                       this.recognition.start();
                     } else {
                       line = recordings_to_play[index]["recording"];
@@ -267,6 +282,7 @@ export default {
               line_cue = recordings_to_play[index]["cue"];
               this.characterPrompt =
                 "Restart...listening for: " + recordings_to_play[index]["name"];
+              this.cuePrompt = "Cue: " + line_cue;
             }
           }
         }.bind(this);
