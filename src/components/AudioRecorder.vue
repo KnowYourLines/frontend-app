@@ -85,7 +85,8 @@ function findShortestCue(cue) {
   return possible_cue;
 }
 function isRepeated(remaining_text, candidate) {
-  candidate = candidate.trim().toLowerCase();
+  candidate = ' ' + candidate.trim().toLowerCase() + ' ';
+  remaining_text = ' ' + remaining_text.trim().toLowerCase() + ' '
   return (
     remaining_text.includes(candidate) || candidate.includes(remaining_text)
   );
