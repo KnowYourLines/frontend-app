@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="btn-group" v-if="!isEditing && !isPlaying">
+    <div class="btn-group" v-if="!isEditing">
         <input type="checkbox" v-model="element.shouldPlay" />
         <label class="edit-label">Play</label>
         <button type="button" class="btn" @click="deleteLine(element.id)">
         Delete
       </button>
     </div>
-    <div v-else-if="isEditing && !isPlaying">
+    <div v-else>
       <label class="edit-label">Edit name: </label>
       <input type="text" autocomplete="on" v-model.lazy.trim="element.name" />
       <label class="edit-label">Edit cue: </label>
@@ -19,10 +19,6 @@
 export default {
   props: {
     isEditing: {
-      type: Boolean,
-      required: true,
-    },
-    isPlaying: {
       type: Boolean,
       required: true,
     },

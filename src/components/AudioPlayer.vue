@@ -1,14 +1,14 @@
 <template>
   <div>
+    <div v-if="isPlaying" class="play-controls">
+      <button type="button" class="play" @click="stopAll">Stop</button>
+      <h2>{{ characterPrompt }}<br />{{ cuePrompt }}<br />{{ speechHeard }}</h2>
+    </div>
     <audio-list
       :isPlaying="isPlaying"
       @play-nonstop="playAll"
-      @stop-playing="pause"
       @play-on-cue="playOnCue"
     />
-    <h2 v-if="isPlaying">
-      {{ characterPrompt }}<br />{{ cuePrompt }}<br />{{ speechHeard }}
-    </h2>
   </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
         }.bind(this)
       );
     },
-    pause: function () {
+    stopAll: function () {
       this.isPlaying = false;
       this.characterPrompt = "";
       this.speechHeard = "";
@@ -71,10 +71,12 @@ export default {
       if (typeof this.player !== "undefined") {
         this.player.pause();
       }
-      this.recognition.abort();
-      this.recognition.onend = function () {
+      if (typeof this.recognition !== "undefined") {
         this.recognition.abort();
-      }.bind(this);
+        this.recognition.onend = function () {
+          this.recognition.abort();
+        }.bind(this);
+      }
     },
     playOnCue: function (recordings, characters) {
       var recordings_to_play = recordings.filter(
@@ -126,7 +128,7 @@ export default {
                   var line_cue = recordings_to_play[index]["cue"];
                   this.characterPrompt =
                     "Listening for: " + recordings_to_play[index]["name"];
-                  this.cuePrompt = "Cue: " + line_cue
+                  this.cuePrompt = "Cue: " + line_cue;
                   this.recognition.onresult = function (event) {
                     this.cue = event.results[event.resultIndex][0].transcript;
                     this.speechHeard = "Heard: " + this.cue;
@@ -153,8 +155,7 @@ export default {
                           this.characterPrompt =
                             "Listening for: " +
                             recordings_to_play[index]["name"];
-                          this.cuePrompt =
-                            "Cue: " + line_cue;
+                          this.cuePrompt = "Cue: " + line_cue;
                         } else {
                           this.recognition.abort();
                           line = recordings_to_play[index]["recording"];
@@ -250,8 +251,7 @@ export default {
                       this.characterPrompt =
                         "Restart...listening for: " +
                         recordings_to_play[index]["name"];
-                      this.cuePrompt =
-                        "Cue: " + line_cue;
+                      this.cuePrompt = "Cue: " + line_cue;
                       console.log("restart");
                       this.recognition.start();
                     }
@@ -260,8 +260,7 @@ export default {
                       line_cue = recordings_to_play[index]["cue"];
                       this.characterPrompt =
                         "Listening for: " + recordings_to_play[index]["name"];
-                      this.cuePrompt =
-                        "Cue: " + line_cue;
+                      this.cuePrompt = "Cue: " + line_cue;
                       this.recognition.start();
                     } else {
                       line = recordings_to_play[index]["recording"];
@@ -300,3 +299,25 @@ function OnCueIndexes(recordings, characters) {
   return indexes;
 }
 </script>
+<style scoped>
+button {
+  width: 50%;
+  font-size: 18px;
+  font-weight: 200;
+  padding: 1em;
+  background: transparent;
+  border: 4px solid #2257ca;
+  border-radius: 4px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  color: #2257ca;
+  margin-bottom: 4em;
+  position: relative;
+}
+
+button:hover,
+button:focus {
+  background: #2257ca;
+  color: #fff;
+}
+</style>

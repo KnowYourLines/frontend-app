@@ -1,13 +1,13 @@
 <template>
   <div>
     <audio-recorder :isPlaying="isPlaying" @recording-done="recordingDone" />
-    <div class="container">
+    <div v-if="!isPlaying" class="container">
       <div v-for="name in uniqCharacters" :key="name">
         <input type="checkbox" v-model="selectedCharacters" :value="name" />
         <label>{{ name }}</label>
       </div>
     </div>
-    <span>Selected: {{ selectedCharacters }}</span>
+
     <div class="button-group" v-if="!isPlaying">
       <button type="button" class="btn" @click="muteSelected">
         Skip Selected
@@ -15,21 +15,13 @@
       <button type="button" class="btn" @click="unmuteSelected">
         Unskip Selected
       </button>
-      <button
-        type="button"
-        class="btn"
-        v-if="!isPlaying"
-        @click="playCharacters"
-      >
+      <button type="button" class="btn" @click="playCharacters">
         Play and listen for selected
       </button>
     </div>
     <div class="btn-group">
       <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
         Play Nonstop
-      </button>
-      <button type="button" class="play" v-else @click="$emit('stop-playing')">
-        Stop
       </button>
       <button
         class="edit"
@@ -49,18 +41,20 @@
       </button>
     </div>
     <draggable
+      v-if="!isPlaying"
       handle=".my-handle"
       ghost-class="ghost"
-      :disabled="isPlaying"
       :list="list"
       :move="checkMove"
       class="list-group"
     >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        <span class="my-handle"> <img v-if="!isPlaying" src="..\assets\reorder.png"> {{ element.name }} Cue: {{ element.cue }}</span>
+        <span class="my-handle">
+          <img src="..\assets\reorder.png" />
+          {{ element.name }} Cue: {{ element.cue }}</span
+        >
         <audio-edit
           :isEditing="isEditing"
-          :isPlaying="isPlaying"
           :element="element"
           @delete-line="deletion"
         />
