@@ -301,7 +301,7 @@ function OnCueIndexes(recordings, characters) {
 </script>
 <style scoped>
 button {
-  width: 50%;
+  width: 100%;
   font-size: 18px;
   font-weight: 200;
   padding: 1em;

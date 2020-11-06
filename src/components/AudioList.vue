@@ -1,27 +1,26 @@
 <template>
   <div v-if="!isPlaying">
     <audio-recorder @recording-done="recordingDone" />
+    <div class="play-btn-group">
+      <button class="play" @click="playNonstop" type="button">
+        Play Nonstop
+      </button>
+      <button type="button" class="btn" @click="playCharacters">
+        Play and listen for selected
+      </button>
+    </div>
     <div class="container">
       <div v-for="name in uniqCharacters" :key="name">
         <input type="checkbox" v-model="selectedCharacters" :value="name" />
         <label>{{ name }}</label>
       </div>
     </div>
-
-    <div class="button-group">
+    <div class="edit-btn-group">
       <button type="button" class="btn" @click="muteSelected">
         Skip Selected
       </button>
       <button type="button" class="btn" @click="unmuteSelected">
         Unskip Selected
-      </button>
-      <button type="button" class="btn" @click="playCharacters">
-        Play and listen for selected
-      </button>
-    </div>
-    <div class="btn-group">
-      <button class="play" @click="playNonstop" type="button">
-        Play Nonstop
       </button>
       <button
         class="edit"
@@ -146,7 +145,7 @@ export default {
   height: 100px;
   overflow-y: scroll;
 }
-.btn-group button {
+.play-btn-group button {
   width: 50%;
   font-size: 18px;
   font-weight: 200;
@@ -161,11 +160,32 @@ export default {
   position: relative;
 }
 
-.btn-group button:hover,
-.btn-group button:focus {
+.play-btn-group button:hover,
+.play-btn-group button:focus {
   background: #2257ca;
   color: #fff;
 }
+.edit-btn-group button {
+  width: 33.3%;
+  font-size: 18px;
+  font-weight: 200;
+  padding: 1em;
+  background: transparent;
+  border: 4px solid #2257ca;
+  border-radius: 4px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  color: #2257ca;
+  margin-bottom: 4em;
+  position: relative;
+}
+
+.edit-btn-group button:hover,
+.edit-btn-group button:focus {
+  background: #2257ca;
+  color: #fff;
+}
+
 div.list-group-item {
   font-size: 18px;
   font-weight: 200;
