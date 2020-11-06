@@ -1,8 +1,8 @@
 <template>
   <div>
-    <input type="text" autocomplete="on" v-if="!isPlaying" v-model.lazy.trim="character" />
+    <input type="text" autocomplete="on" v-model.lazy.trim="character" />
     <button
-      v-if="!isRecording && !isPlaying"
+      v-if="!isRecording"
       @click="
         recordAudio();
         transcribeSpeech();
@@ -11,19 +11,13 @@
     >
       Record
     </button>
-    <button v-else-if="isRecording && !isPlaying" @click="stop" type="button">Stop</button>
+    <button v-else-if="isRecording" @click="stop" type="button">Stop</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "AudioRecorder",
-  props: {
-    isPlaying: {
-      type: Boolean,
-      required: true,
-    },
-  },
   data() {
     return {
       isRecording: false,

@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <audio-recorder :isPlaying="isPlaying" @recording-done="recordingDone" />
-    <div v-if="!isPlaying" class="container">
+  <div v-if="!isPlaying">
+    <audio-recorder @recording-done="recordingDone" />
+    <div class="container">
       <div v-for="name in uniqCharacters" :key="name">
         <input type="checkbox" v-model="selectedCharacters" :value="name" />
         <label>{{ name }}</label>
       </div>
     </div>
 
-    <div class="button-group" v-if="!isPlaying">
+    <div class="button-group">
       <button type="button" class="btn" @click="muteSelected">
         Skip Selected
       </button>
@@ -20,20 +20,20 @@
       </button>
     </div>
     <div class="btn-group">
-      <button class="play" @click="playNonstop" v-if="!isPlaying" type="button">
+      <button class="play" @click="playNonstop" type="button">
         Play Nonstop
       </button>
       <button
         class="edit"
         @click="toggleToItemEditForm"
-        v-if="!isEditing && !isPlaying"
+        v-if="!isEditing"
         type="button"
       >
         Edit
       </button>
       <button
         type="button"
-        v-else-if="isEditing && !isPlaying"
+        v-else-if="isEditing"
         class="edit"
         @click="editDone"
       >
@@ -41,7 +41,6 @@
       </button>
     </div>
     <draggable
-      v-if="!isPlaying"
       handle=".my-handle"
       ghost-class="ghost"
       :list="list"
