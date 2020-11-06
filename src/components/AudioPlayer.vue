@@ -131,15 +131,12 @@ export default {
                   this.cuePrompt = "Cue: " + line_cue;
                   this.recognition.onresult = function (event) {
                     this.cue = event.results[event.resultIndex][0].transcript;
+                    this.cue = " " + this.cue.trim().toLowerCase() + " ";
                     this.speechHeard = "Heard: " + this.cue;
+                    line_cue = " " + line_cue.trim().toLowerCase() + " ";
                     console.log(line_cue);
                     console.log(this.cue);
-                    if (
-                      this.cue
-                        .trim()
-                        .toLowerCase()
-                        .includes(line_cue.trim().toLowerCase())
-                    ) {
+                    if (this.cue.includes(line_cue)) {
                       console.log("hooray");
                       this.speechHeard = "";
                       this.cuePrompt = "";
@@ -204,15 +201,13 @@ export default {
         this.cuePrompt = "Cue: " + line_cue;
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
+          this.cue = " " + this.cue.trim().toLowerCase() + " ";
+
           this.speechHeard = "Heard: " + this.cue;
+          line_cue = " " + line_cue.trim().toLowerCase() + " ";
           console.log(line_cue);
           console.log(this.cue);
-          if (
-            this.cue
-              .trim()
-              .toLowerCase()
-              .includes(line_cue.trim().toLowerCase())
-          ) {
+          if (this.cue.includes(line_cue)) {
             this.recognition.abort();
             this.speechHeard = "";
             this.cuePrompt = "";
