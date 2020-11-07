@@ -1,10 +1,7 @@
 ### Todo
 
-#### UI
-- [ ] Handle no speech recognition in browser by computed property (Player/Recorder)
-
 #### Cleanup
-- [ ] Restyle list, edit, player 
+- [ ] Restyle 
 - [ ] Refactor player
 - [ ] Deploy on heroku
 
