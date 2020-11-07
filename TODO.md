@@ -1,7 +1,7 @@
 ### Todo
 
 #### Cleanup
-- [ ] Restyle 
+- [ ] Restyle edit, select, player
 - [ ] Refactor player
 - [ ] Deploy on heroku
 
