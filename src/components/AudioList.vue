@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-        <div class="selected-btn-group">
+    <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
         Play and listen for selected
       </button>
@@ -49,15 +49,27 @@
       class="list-group"
     >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        <span class="my-handle">
-          <img src="..\assets\reorder.png" />
-          {{ element.name }} Cue: {{ element.cue }}</span
-        >
-        <audio-edit
-          :isEditing="isEditing"
-          :element="element"
-          @delete-line="deletion"
-        />
+        <div class="container">
+          <div class="container">
+            <div>
+              <span class="my-handle">
+                <img src="..\assets\reorder.png" />
+              </span>
+            </div>
+            <div>
+              <span class="my-handle"
+                >{{ element.name }}</span
+              ><br /><span class="my-handle"
+                >Cue: {{ element.cue }}</span
+              >
+            </div>
+          </div>
+            <audio-edit
+              :isEditing="isEditing"
+              :element="element"
+              @delete-line="deletion"
+            />
+        </div>
       </div>
     </draggable>
   </div>
@@ -218,5 +230,6 @@ div.list-group-item {
 .my-handle {
   cursor: move;
   cursor: -webkit-grabbing;
+  margin:5px
 }
 </style>
