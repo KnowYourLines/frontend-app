@@ -1,6 +1,14 @@
 <template>
   <div v-if="!isPlaying">
-    <audio-recorder @recording-done="recordingDone" />
+    <div class="container">
+      <audio-recorder @recording-done="recordingDone" />
+      <div class="selection">
+      <div  v-for="name in uniqCharacters" :key="name">
+        <input type="checkbox" v-model="selectedCharacters" :value="name" />
+        <label>{{ name }}</label>
+      </div>
+      </div>
+    </div>
     <div class="play-btn-group">
       <button class="play" @click="playNonstop" type="button">
         Play Nonstop
@@ -8,12 +16,6 @@
       <button type="button" class="btn" @click="playCharacters">
         Play and listen for selected
       </button>
-    </div>
-    <div class="container">
-      <div v-for="name in uniqCharacters" :key="name">
-        <input type="checkbox" v-model="selectedCharacters" :value="name" />
-        <label>{{ name }}</label>
-      </div>
     </div>
     <div class="edit-btn-group">
       <button type="button" class="btn" @click="muteSelected">
@@ -140,6 +142,10 @@ export default {
 </script>
 <style scoped>
 .container {
+    display: flex;
+}
+
+.selection {
   border: 2px solid #ccc;
   width: 300px;
   height: 100px;
