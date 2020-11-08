@@ -80,14 +80,6 @@ export default {
       );
       var recognition_indexes = OnCueIndexes(recordings_to_play, characters);
       console.log(recognition_indexes);
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (typeof SpeechRecognition !== "undefined") {
-        this.recognition = new SpeechRecognition();
-        this.recognition.lang = "en-US";
-        this.recognition.interimResults = true;
-        this.recognition.continuous = true;
-      }
       if (recognition_indexes[0] > 0) {
         var index = 0;
         var line = recordings_to_play[index]["recording"];
@@ -106,63 +98,55 @@ export default {
             }
             if (index < recordings_to_play.length) {
               if (recognition_indexes.includes(index)) {
-                const SpeechRecognition =
-                  window.SpeechRecognition || window.webkitSpeechRecognition;
-                if (typeof SpeechRecognition !== "undefined") {
-                  this.recognition = new SpeechRecognition();
-                  this.recognition.lang = "en-US";
-                  this.recognition.interimResults = true;
-                  this.recognition.continuous = true;
-                  this.recognition.start();
-                  var line_cue = recordings_to_play[index]["cue"];
-                  this.characterPrompt =
-                    "Listening for: " + recordings_to_play[index]["name"];
-                  this.cuePrompt = "Cue: " + line_cue;
-                  this.recognition.onresult = function (event) {
-                    this.cue = event.results[event.resultIndex][0].transcript;
-                    this.cue = " " + this.cue.trim().toLowerCase() + " ";
-                    this.speechHeard = "Heard: " + this.cue;
-                    line_cue = " " + line_cue.trim().toLowerCase() + " ";
-                    console.log(line_cue);
-                    console.log(this.cue);
-                    if (this.cue.includes(line_cue)) {
-                      console.log("hooray");
-                      this.speechHeard = "";
-                      this.cuePrompt = "";
-                      this.recognition.abort();
-                      if (index < recordings_to_play.length - 1) {
-                        console.log("next");
-                        index++;
-                        if (recognition_indexes.includes(index)) {
-                          this.recognition.onend = function () {
-                            this.recognition.start();
-                          }.bind(this);
-                          line_cue = recordings_to_play[index]["cue"];
-                          this.characterPrompt =
-                            "Listening for: " +
-                            recordings_to_play[index]["name"];
-                          this.cuePrompt = "Cue: " + line_cue;
-                        } else {
-                          this.recognition.abort();
-                          line = recordings_to_play[index]["recording"];
-                          this.characterPrompt =
-                            "Playing for: " + recordings_to_play[index]["name"];
-                          this.player.src = window.URL.createObjectURL(line);
-                          this.player.play();
-                        }
+                this.recognition = newSpeechRecognition();
+                this.recognition.start();
+                var line_cue = recordings_to_play[index]["cue"];
+                this.characterPrompt =
+                  "Listening for: " + recordings_to_play[index]["name"];
+                this.cuePrompt = "Cue: " + line_cue;
+                this.recognition.onresult = function (event) {
+                  this.cue = event.results[event.resultIndex][0].transcript;
+                  this.cue = " " + this.cue.trim().toLowerCase() + " ";
+                  this.speechHeard = "Heard: " + this.cue;
+                  line_cue = " " + line_cue.trim().toLowerCase() + " ";
+                  console.log(line_cue);
+                  console.log(this.cue);
+                  if (this.cue.includes(line_cue)) {
+                    console.log("hooray");
+                    this.speechHeard = "";
+                    this.cuePrompt = "";
+                    this.recognition.abort();
+                    if (index < recordings_to_play.length - 1) {
+                      console.log("next");
+                      index++;
+                      if (recognition_indexes.includes(index)) {
+                        this.recognition.onend = function () {
+                          this.recognition.start();
+                        }.bind(this);
+                        line_cue = recordings_to_play[index]["cue"];
+                        this.characterPrompt =
+                          "Listening for: " + recordings_to_play[index]["name"];
+                        this.cuePrompt = "Cue: " + line_cue;
                       } else {
-                        index = 0;
-                        console.log("restart");
+                        this.recognition.abort();
                         line = recordings_to_play[index]["recording"];
                         this.characterPrompt =
-                          "Restart...playing for: " +
-                          recordings_to_play[index]["name"];
+                          "Playing for: " + recordings_to_play[index]["name"];
                         this.player.src = window.URL.createObjectURL(line);
                         this.player.play();
                       }
+                    } else {
+                      index = 0;
+                      console.log("restart");
+                      line = recordings_to_play[index]["recording"];
+                      this.characterPrompt =
+                        "Restart...playing for: " +
+                        recordings_to_play[index]["name"];
+                      this.player.src = window.URL.createObjectURL(line);
+                      this.player.play();
                     }
-                  }.bind(this);
-                }
+                  }
+                }.bind(this);
               } else {
                 line = recordings_to_play[index]["recording"];
                 if (index == 0) {
@@ -182,12 +166,13 @@ export default {
       }
       if (recognition_indexes[0] == 0) {
         index = 0;
-        this.recognition.start();
-        this.isPlaying = true;
         var line_cue = recordings_to_play[index]["cue"];
+        this.isPlaying = true;
         this.characterPrompt =
           "Listening for: " + recordings_to_play[index]["name"];
         this.cuePrompt = "Cue: " + line_cue;
+        this.recognition = newSpeechRecognition();
+        this.recognition.start();
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
           this.cue = " " + this.cue.trim().toLowerCase() + " ";
@@ -272,6 +257,17 @@ function OnCueIndexes(recordings, characters) {
       indexes.push(i);
     }
   return indexes;
+}
+function newSpeechRecognition() {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (typeof SpeechRecognition !== "undefined") {
+    var recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = true;
+    recognition.continuous = true;
+  }
+  return recognition;
 }
 </script>
 <style scoped>
