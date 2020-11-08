@@ -295,9 +295,18 @@ function OnCueIndexes(recordings, characters) {
 }
 </script>
 <style scoped>
+h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 200;
+  font-family: helvetica; 
+  color: #87169e;
+}
 button {
   width: 100%;
-  font-size: 18px;
+  font-size: 32px;
   font-weight: 200;
   padding: 1em;
   background: transparent;
