@@ -22,7 +22,7 @@
     </div>
     <div class="btn-group">
       <button class="play" @click="playNonstop" type="button">
-        Play Nonstop
+        Play all nonstop
       </button>
       <button
         class="edit"
@@ -173,7 +173,7 @@ label {
   height: 100px;
   overflow-y: scroll;
   background: transparent;
-  border: 4px solid #f22f46;
+  border: 4px solid #2257ca;
   border-radius: 4px;
 }
 .btn-group button {
@@ -182,18 +182,18 @@ label {
   font-weight: 200;
   padding: 1em;
   background: transparent;
-  border: 4px solid #2257ca;
+  border: 4px solid #87169e;
   border-radius: 4px;
   transition: all 0.4s ease 0s;
   cursor: pointer;
-  color: #2257ca;
+  color: #87169e;
   margin-bottom: 4em;
   position: relative;
 }
 
 .btn-group button:hover,
 .btn-group button:focus {
-  background: #2257ca;
+  background: #87169e;
   color: #fff;
 }
 .selected-btn-group button {

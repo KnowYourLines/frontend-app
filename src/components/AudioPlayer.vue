@@ -301,18 +301,18 @@ button {
   font-weight: 200;
   padding: 1em;
   background: transparent;
-  border: 4px solid #2257ca;
+  border: 4px solid #f22f46;
   border-radius: 4px;
   transition: all 0.4s ease 0s;
   cursor: pointer;
-  color: #2257ca;
+  color: #f22f46;
   margin-bottom: 4em;
   position: relative;
 }
 
 button:hover,
 button:focus {
-  background: #2257ca;
+  background: #f22f46;
   color: #fff;
 }
 </style>
