@@ -1,7 +1,6 @@
 ### Todo
 
 #### Cleanup
-- [ ] Refactor player
 - [ ] Deploy on heroku
 
 #### Backend integration
