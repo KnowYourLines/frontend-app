@@ -1,8 +1,5 @@
 ### Todo
 
-#### Cleanup
-- [ ] Deploy on heroku
-
 #### Backend integration
 - [ ] Register
 - [ ] Login
