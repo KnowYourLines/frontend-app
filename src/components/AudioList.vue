@@ -53,7 +53,7 @@
           <div class="container">
             <div>
               <span class="my-handle">
-                <img src="..\assets\reorder.png" />
+                <img src="@/assets/reorder.png" />
               </span>
             </div>
             <div>
