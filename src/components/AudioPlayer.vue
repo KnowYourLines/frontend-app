@@ -46,10 +46,6 @@ export default {
           index++;
           if (index == recordings_to_play.length) {
             index = 0;
-            recordings_to_play = recordings.filter(
-              (recording) => recording.shouldPlay
-            );
-            this.isPlaying = !(recordings_to_play.length == 0);
             this.characterPrompt =
               "Playing for: " + recordings_to_play[index]["name"];
           }
