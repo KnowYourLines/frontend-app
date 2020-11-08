@@ -10,6 +10,7 @@
     <div v-else>
       <label class="edit-label">Edit name: </label>
       <input type="text" autocomplete="on" v-model.lazy.trim="element.name" />
+      <br>
       <label class="edit-label">Edit cue: </label>
       <input type="text" autocomplete="on" v-model.lazy.trim="element.cue" />
     </div>
@@ -63,9 +64,5 @@ input[type="text"] {
   grid-row: 1;
   background-color: #87169e;
   color: white;
-}
-div {
-  display: inline;
-  margin-left: 5em;
 }
 </style>

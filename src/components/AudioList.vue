@@ -49,7 +49,7 @@
       class="list-group"
     >
       <div class="list-group-item" v-for="element in list" :key="element.id">
-        <div class="container">
+        <div class="item-container">
           <div class="container">
             <div>
               <span class="my-handle">
@@ -153,6 +153,11 @@ export default {
 };
 </script>
 <style scoped>
+.item-container {
+  display: flex;
+  justify-content: space-between
+}
+
 .container {
   display: flex;
 }
