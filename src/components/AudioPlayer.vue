@@ -103,13 +103,6 @@ export default {
             index++;
             if (index == recordings_to_play.length) {
               index = 0;
-              recognition_indexes = OnCueIndexes(
-                recordings_to_play,
-                characters
-              );
-              recordings_to_play = recordings.filter(
-                (recording) => recording.shouldPlay
-              );
             }
             if (index < recordings_to_play.length) {
               if (recognition_indexes.includes(index)) {
@@ -198,7 +191,6 @@ export default {
         this.recognition.onresult = function (event) {
           this.cue = event.results[event.resultIndex][0].transcript;
           this.cue = " " + this.cue.trim().toLowerCase() + " ";
-
           this.speechHeard = "Heard: " + this.cue;
           line_cue = " " + line_cue.trim().toLowerCase() + " ";
           console.log(line_cue);
@@ -231,13 +223,6 @@ export default {
                     index++;
                     if (index == recordings_to_play.length) {
                       index = 0;
-                      recordings_to_play = recordings.filter(
-                        (recording) => recording.shouldPlay
-                      );
-                      recognition_indexes = OnCueIndexes(
-                        recordings_to_play,
-                        characters
-                      );
                       line_cue = recordings_to_play[index]["cue"];
                       this.characterPrompt =
                         "Restart...listening for: " +
@@ -246,7 +231,6 @@ export default {
                       console.log("restart");
                       this.recognition.start();
                     }
-
                     if (recognition_indexes.includes(index)) {
                       line_cue = recordings_to_play[index]["cue"];
                       this.characterPrompt =
@@ -297,7 +281,7 @@ h2 {
   justify-content: center;
   font-size: 48px;
   font-weight: 200;
-  font-family: helvetica; 
+  font-family: helvetica;
   color: #87169e;
 }
 button {
