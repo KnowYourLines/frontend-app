@@ -23,14 +23,14 @@ export default {
       isRecording: false,
       character: "Character name",
       cue: "",
+      listener: navigator.mediaDevices.getUserMedia({ audio: true }),
     };
   },
   methods: {
     recordAudio() {
       this.isRecording = true;
       this.dataArray = [];
-      let device = navigator.mediaDevices.getUserMedia({ audio: true });
-      device.then((stream) => {
+      this.listener.then((stream) => {
         this.recorder = new MediaRecorder(stream);
         //0 for as little audio buffering as possible
         this.recorder.start(0);
