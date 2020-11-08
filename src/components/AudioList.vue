@@ -11,13 +11,13 @@
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
-        Play and listen for selected
+        Play and listen for character(s)
       </button>
       <button type="button" class="btn" @click="muteSelected">
-        Skip Selected
+        Skip lines for character(s)
       </button>
       <button type="button" class="btn" @click="unmuteSelected">
-        Unskip Selected
+        Unskip lines for character(s)
       </button>
     </div>
     <div class="btn-group">
@@ -153,6 +153,12 @@ export default {
 };
 </script>
 <style scoped>
+label {
+  color: #2257ca;
+  font-size: 18px;
+  font-weight: 200;
+  font-family: helvetica;
+}
 .item-container {
   display: flex;
   justify-content: space-between
@@ -163,10 +169,12 @@ export default {
 }
 
 .selection {
-  border: 2px solid #ccc;
   width: 300px;
   height: 100px;
   overflow-y: scroll;
+  background: transparent;
+  border: 4px solid #f22f46;
+  border-radius: 4px;
 }
 .btn-group button {
   width: 50%;
@@ -213,7 +221,7 @@ div.list-group-item {
   font-size: 18px;
   font-weight: 200;
   font-family: helvetica;
-  padding: 1em;
+  padding: 0.7em;
   width: 50%;
   background: transparent;
   border: 4px solid #87169e;

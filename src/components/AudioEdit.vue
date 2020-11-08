@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="btn-group" v-if="!isEditing">
-        <input type="checkbox" v-model="element.shouldPlay" />
-        <label class="edit-label">Play</label>
-        <button type="button" class="btn" @click="deleteLine(element.id)">
+      <input type="checkbox" v-model="element.shouldPlay" />
+      <label class="edit-label">Play</label>
+      <button type="button" class="btn" @click="deleteLine(element.id)">
         Delete
       </button>
     </div>
     <div v-else>
       <label class="edit-label">Edit name: </label>
       <input type="text" autocomplete="on" v-model.lazy.trim="element.name" />
-      <br>
+      <br />
       <label class="edit-label">Edit cue: </label>
       <input type="text" autocomplete="on" v-model.lazy.trim="element.cue" />
     </div>
@@ -46,7 +46,7 @@ button {
   cursor: pointer;
   color: #87169e;
   display: inline-block;
-  margin-left: 2em
+  margin-left: 2em;
 }
 button:hover,
 button:focus {
