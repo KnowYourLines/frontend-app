@@ -79,7 +79,7 @@
 import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
 import AudioEdit from "./AudioEdit";
-import uniqueId from "lodash.uniqueid";
+import { v4 as uuidv4 } from 'uuid';
 import uniqBy from "lodash.uniqby";
 export default {
   name: "AudioList",
@@ -115,7 +115,7 @@ export default {
         name: line["character"],
         recording: line["recording"],
         cue: line["cue"],
-        id: uniqueId("line-"),
+        id: uuidv4(),
         shouldPlay: true,
       });
     },
