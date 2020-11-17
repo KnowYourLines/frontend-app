@@ -46,13 +46,16 @@ export default {
           index++;
           if (index == recordings_to_play.length) {
             index = 0;
-            this.characterPrompt =
-              "Playing for: " + recordings_to_play[index]["name"];
           }
           if (index < recordings_to_play.length) {
             line = recordings_to_play[index]["recording"];
-            this.characterPrompt =
+            if (index == 0){
+              this.characterPrompt =
+              "Restart...playing for: " + recordings_to_play[index]["name"];
+            } else {
+              this.characterPrompt =
               "Playing for: " + recordings_to_play[index]["name"];
+            }
             this.player.src = window.URL.createObjectURL(line);
             this.player.play();
           }
