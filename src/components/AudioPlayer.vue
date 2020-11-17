@@ -208,18 +208,18 @@ export default {
                     index++;
                     if (index == recordings_to_play.length) {
                       index = 0;
-                      line_cue = recordings_to_play[index]["cue"];
-                      this.characterPrompt =
-                        "Restart...listening for: " +
-                        recordings_to_play[index]["name"];
-                      this.cuePrompt = "Cue: " + line_cue;
                       console.log("restart");
-                      this.recognition.start();
                     }
                     if (recognition_indexes.includes(index)) {
                       line_cue = recordings_to_play[index]["cue"];
-                      this.characterPrompt =
-                        "Listening for: " + recordings_to_play[index]["name"];
+                      if (index == 0) {
+                        this.characterPrompt =
+                          "Restart...listening for: " +
+                          recordings_to_play[index]["name"];
+                      } else {
+                        this.characterPrompt =
+                          "Listening for: " + recordings_to_play[index]["name"];
+                      }
                       this.cuePrompt = "Cue: " + line_cue;
                       this.recognition.start();
                     } else {
