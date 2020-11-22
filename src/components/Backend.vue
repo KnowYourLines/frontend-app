@@ -25,7 +25,7 @@ export default {
     logIn() {
       axios
         .post(
-          " https://knowyourlines-backend-sandbox.herokuapp.com/accounts/login/",
+          process.env.VUE_APP_BACKEND_URL + "accounts/login/",
           {
             username: this.email,
             password: this.password,
@@ -42,14 +42,14 @@ export default {
     logOut() {
       axios
         .post(
-          "https://knowyourlines-backend-sandbox.herokuapp.com/accounts/logout/"
+          process.env.VUE_APP_BACKEND_URL + "accounts/logout/"
         )
         .then((this.isLoggedIn = false));
     },
     register() {
       axios
         .post(
-          "https://knowyourlines-backend-sandbox.herokuapp.com/accounts/register/",
+          process.env.VUE_APP_BACKEND_URL + "accounts/register/",
           {
             username: this.email,
             email: this.email,
@@ -62,7 +62,7 @@ export default {
     reset() {
       axios
         .post(
-          "https://knowyourlines-backend-sandbox.herokuapp.com/accounts/reset-password/",
+          process.env.VUE_APP_BACKEND_URL + "accounts/reset-password/",
           {
             email: this.email,
           }
