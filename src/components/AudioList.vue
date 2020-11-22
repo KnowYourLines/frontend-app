@@ -8,6 +8,7 @@
           <label>{{ name }}</label>
         </div>
       </div>
+      <backend />
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
@@ -79,6 +80,7 @@
 import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
 import AudioEdit from "./AudioEdit";
+import Backend from "./Backend";
 import { v4 as uuidv4 } from 'uuid';
 import uniqBy from "lodash.uniqby";
 export default {
@@ -87,6 +89,7 @@ export default {
     draggable,
     AudioRecorder,
     AudioEdit,
+    Backend
   },
   data() {
     return {
