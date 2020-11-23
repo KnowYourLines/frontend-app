@@ -138,7 +138,7 @@ export default {
           }
           postData.append("file", newLine["recording"]);
           axios
-            .post(postUrl, postData, { headers: { Authorization: "" } })
+            .post(postUrl, postData, { headers: { "Authorization": "" } })
             .catch(function (error) {
               if (error.response) {
                 console.log(error.response.data);
