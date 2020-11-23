@@ -131,10 +131,10 @@ export default {
             "/"
         )
         .then((response) => {
-          var postUrl = response["data"]["data"]["url"];
+          var postUrl = response["data"]["s3Request"]["url"];
           var postData = new FormData();
-          for (var key in response["data"]["data"]["fields"]) {
-            postData.append(key, response["data"]["data"]["fields"][key]);
+          for (var key in response["data"]["s3Request"]["fields"]) {
+            postData.append(key, response["data"]["s3Request"]["fields"][key]);
           }
           postData.append("file", newLine["recording"]);
           axios
