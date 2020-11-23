@@ -8,7 +8,7 @@
           <label>{{ name }}</label>
         </div>
       </div>
-      <backend @loggedIn="onLogIn" />
+      <backend :list="list" @loggedIn="onLogIn" />
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">

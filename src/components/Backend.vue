@@ -6,6 +6,9 @@
     <button v-else-if="isLoggedIn" @click="logOut" type="button">Logout</button>
     <button @click="register" type="button">Send registration</button>
     <button @click="reset" type="button">Send password reset</button>
+    <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
+    <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
+    <button @click="saveAs" type="button">Save As</button>
   </div>
 </template>
 
@@ -18,10 +21,31 @@ export default {
       isLoggedIn: false,
       email: "email@address.com",
       password: "password",
+      scriptName: "Romeo and Juliet",
+      writer: "William Shakespeare",
       token: null,
     };
   },
+  props: {
+    list: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {
+    saveAs() {
+      axios
+        .post(
+          process.env.VUE_APP_BACKEND_URL + "scripts/",
+          {
+            scriptName: this.scriptName,
+            writer: this.writer,
+            lines: addOrder(this.list),
+          }
+        )
+        .then(console.log)
+        .catch(console.log);
+    },
     logIn() {
       axios
         .post(
@@ -73,4 +97,10 @@ export default {
     },
   },
 };
+function addOrder(lines) {
+  for (var i = 0; i < lines.length; i++){
+    lines[i]["order"] = i
+    }
+  return lines
+}
 </script>

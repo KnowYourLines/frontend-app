@@ -1,8 +1,8 @@
 ### Todo
 
 #### Backend integration
-- [ ] Script load, via user endpoint
 - [ ] Script save/update, add order, via script detail endpoint
+- [ ] Script load, via user endpoint
 - [ ] Script delete, via script detail endpoint
 - [ ] Styling
 
