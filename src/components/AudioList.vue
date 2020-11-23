@@ -8,7 +8,7 @@
           <label>{{ name }}</label>
         </div>
       </div>
-      <backend @loggedIn="onLogIn"/>
+      <backend @loggedIn="onLogIn" />
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
@@ -58,18 +58,15 @@
               </span>
             </div>
             <div>
-              <span class="my-handle"
-                >{{ element.name }}</span
-              ><br /><span class="my-handle"
-                >Cue: {{ element.cue }}</span
-              >
+              <span class="my-handle">{{ element.name }}</span
+              ><br /><span class="my-handle">Cue: {{ element.cue }}</span>
             </div>
           </div>
-            <audio-edit
-              :isEditing="isEditing"
-              :element="element"
-              @delete-line="deletion"
-            />
+          <audio-edit
+            :isEditing="isEditing"
+            :element="element"
+            @delete-line="deletion"
+          />
         </div>
       </div>
     </draggable>
@@ -81,15 +78,16 @@ import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
 import AudioEdit from "./AudioEdit";
 import Backend from "./Backend";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import uniqBy from "lodash.uniqby";
+import axios from "axios";
 export default {
   name: "AudioList",
   components: {
     draggable,
     AudioRecorder,
     AudioEdit,
-    Backend
+    Backend,
   },
   data() {
     return {
@@ -111,20 +109,52 @@ export default {
     },
   },
   methods: {
-    onLogIn: function(token) {
-      this.token = token
+    onLogIn: function (token) {
+      this.token = token;
     },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
     },
     recordingDone: function (line) {
-      this.list.push({
+      var newLine = {
         name: line["character"],
         recording: line["recording"],
         cue: line["cue"],
-        id: uuidv4(),
+        lineId: uuidv4(),
         shouldPlay: true,
-      });
+      };
+      axios
+        .get(
+          process.env.VUE_APP_BACKEND_URL +
+            "get_upload_url/" +
+            newLine["lineId"] +
+            "/"
+        )
+        .then((response) => {
+          var postUrl = response["data"]["data"]["url"];
+          var postData = new FormData();
+          for (var key in response["data"]["data"]["fields"]) {
+            postData.append(key, response["data"]["data"]["fields"][key]);
+          }
+          postData.append("file", newLine["recording"]);
+          axios
+            .post(postUrl, postData, { headers: { Authorization: "" } })
+            .catch(function (error) {
+              if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              }
+            });
+        })
+        .catch(function (error) {
+              if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              }
+            });
+      this.list.push(newLine);
     },
     playNonstop: function () {
       this.$emit("play-nonstop", this.list);
@@ -168,7 +198,7 @@ label {
 }
 .item-container {
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .container {
@@ -250,6 +280,6 @@ div.list-group-item {
 .my-handle {
   cursor: move;
   cursor: -webkit-grabbing;
-  margin:5px
+  margin: 5px;
 }
 </style>
