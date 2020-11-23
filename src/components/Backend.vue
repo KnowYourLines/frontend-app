@@ -37,6 +37,7 @@ export default {
             Authorization: "Token " + this.token,
           };
           this.isLoggedIn = true;
+          this.$emit('loggedIn', this.token)
         });
     },
     logOut() {

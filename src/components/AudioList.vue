@@ -8,7 +8,7 @@
           <label>{{ name }}</label>
         </div>
       </div>
-      <backend />
+      <backend @loggedIn="onLogIn"/>
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
@@ -96,6 +96,7 @@ export default {
       list: [],
       isEditing: false,
       selectedCharacters: [],
+      token: null,
     };
   },
   props: {
@@ -110,6 +111,9 @@ export default {
     },
   },
   methods: {
+    onLogIn: function(token) {
+      this.token = token
+    },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
     },
