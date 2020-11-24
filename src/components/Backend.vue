@@ -42,20 +42,48 @@ export default {
     },
   },
   methods: {
+    loadScripts() {
+      axios
+        .get(process.env.VUE_APP_BACKEND_URL + "scripts/")
+        .then((response) => {
+          response.data.forEach(
+            function (script) {
+              this.scripts.push({
+                scriptName: script["scriptName"],
+                writer: script["writer"],
+                lines: script["lines"],
+                id: script["id"],
+              });
+            }.bind(this)
+          );
+        })
+        .catch(console.log);
+    },
     deleteScript() {
       axios
-        .delete(process.env.VUE_APP_BACKEND_URL + "scripts/" + this.selectedScriptId + "/")
-        .then(console.log)
+        .delete(
+          process.env.VUE_APP_BACKEND_URL +
+            "scripts/" +
+            this.selectedScriptId +
+            "/"
+        )
+        .then(() => {this.scripts = []; this.loadScripts()})
         .catch(console.log);
     },
     saveChanges() {
       axios
-        .patch(process.env.VUE_APP_BACKEND_URL + "scripts/" + this.selectedScriptId + "/", {
-          scriptName: this.scriptName,
-          writer: this.writer,
-          lines: addOrder(this.list),
-        })
-        .then(console.log)
+        .patch(
+          process.env.VUE_APP_BACKEND_URL +
+            "scripts/" +
+            this.selectedScriptId +
+            "/",
+          {
+            scriptName: this.scriptName,
+            writer: this.writer,
+            lines: addOrder(this.list),
+          }
+        )
+        .then(() => {this.scripts = []; this.loadScripts()})
         .catch(console.log);
     },
     scriptSelected() {
@@ -71,7 +99,7 @@ export default {
           writer: this.writer,
           lines: addOrder(this.list),
         })
-        .then(console.log)
+        .then(() => {this.scripts = []; this.loadScripts()})
         .catch(console.log);
     },
     logIn() {
@@ -87,21 +115,7 @@ export default {
           };
           this.isLoggedIn = true;
           this.$emit("loggedIn", this.token);
-          axios
-            .get(process.env.VUE_APP_BACKEND_URL + "scripts/")
-            .then((response) => {
-              response.data.forEach(
-                function (script) {
-                  this.scripts.push({
-                    scriptName: script["scriptName"],
-                    writer: script["writer"],
-                    lines: script["lines"],
-                    id: script["id"],
-                  });
-                }.bind(this)
-              );
-            })
-            .catch(console.log);
+          this.loadScripts();
         })
         .catch(console.log);
     },
