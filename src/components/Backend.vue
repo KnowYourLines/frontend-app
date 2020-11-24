@@ -8,7 +8,7 @@
     <button @click="reset" type="button">Send password reset</button>
     <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
     <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
-    <button @click="saveAs" type="button">Save As</button>
+    <button @click="saveNew" type="button">Save New</button>
     <select @change="scriptSelected" v-model="selectedScriptId">
       <option
         v-for="script in scripts"
@@ -52,7 +52,7 @@ export default {
               )
       this.$emit("script-selected", selectedScript[0]["lines"]);
     },
-    saveAs() {
+    saveNew() {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
           scriptName: this.scriptName,
