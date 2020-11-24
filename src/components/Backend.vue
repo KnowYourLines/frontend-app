@@ -15,6 +15,7 @@
       </option>
     </select>
     <button @click="saveChanges" type="button">Save changes</button>
+    <button @click="deleteScript" type="button">Delete script</button>
   </div>
 </template>
 
@@ -41,6 +42,12 @@ export default {
     },
   },
   methods: {
+    deleteScript() {
+      axios
+        .delete(process.env.VUE_APP_BACKEND_URL + "scripts/" + this.selectedScriptId + "/")
+        .then(console.log)
+        .catch(console.log);
+    },
     saveChanges() {
       axios
         .patch(process.env.VUE_APP_BACKEND_URL + "scripts/" + this.selectedScriptId + "/", {
