@@ -3,7 +3,7 @@
     <div class="btn-group" v-if="!isEditing">
       <input type="checkbox" v-model="element.shouldPlay" />
       <label class="edit-label">Play</label>
-      <button type="button" class="btn" @click="deleteLine(element.id)">
+      <button type="button" class="btn" @click="deleteLine(element.listItemId)">
         Delete
       </button>
     </div>
@@ -29,8 +29,8 @@ export default {
     },
   },
   methods: {
-    deleteLine(lineId) {
-      this.$emit("delete-line", lineId);
+    deleteLine(id) {
+      this.$emit("delete-line", id);
     },
   },
 };

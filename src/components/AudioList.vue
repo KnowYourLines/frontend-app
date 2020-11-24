@@ -80,7 +80,6 @@ import AudioEdit from "./AudioEdit";
 import Backend from "./Backend";
 import { v4 as uuidv4 } from "uuid";
 import uniqBy from "lodash.uniqby";
-import axios from "axios";
 export default {
   name: "AudioList",
   components: {
@@ -123,40 +122,10 @@ export default {
         name: line["character"],
         recording: line["recording"],
         cue: line["cue"],
-        lineId: uuidv4(),
+        listItemId: uuidv4(),
         shouldPlay: true,
+        uploaded: false,
       };
-      axios
-        .get(
-          process.env.VUE_APP_BACKEND_URL +
-            "get_upload_url/" +
-            newLine["lineId"] +
-            "/"
-        )
-        .then((response) => {
-          var postUrl = response["data"]["s3Request"]["url"];
-          var postData = new FormData();
-          for (var key in response["data"]["s3Request"]["fields"]) {
-            postData.append(key, response["data"]["s3Request"]["fields"][key]);
-          }
-          postData.append("file", newLine["recording"]);
-          axios
-            .post(postUrl, postData, { headers: { "Authorization": "" } })
-            .catch(function (error) {
-              if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              }
-            });
-        })
-        .catch(function (error) {
-              if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              }
-            });
       this.list.push(newLine);
     },
     playNonstop: function () {
@@ -165,8 +134,8 @@ export default {
     playCharacters: function () {
       this.$emit("play-on-cue", this.list, this.selectedCharacters);
     },
-    deletion(lineId) {
-      const lineIndex = this.list.findIndex((line) => line.id === lineId);
+    deletion(id) {
+      const lineIndex = this.list.findIndex((line) => line.listItemId === id);
       this.list.splice(lineIndex, 1);
     },
     toggleToItemEditForm() {
