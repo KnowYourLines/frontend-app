@@ -37,7 +37,12 @@ export default {
       this.characterPrompt =
         "Playing for: " + recordings_to_play[index]["name"];
       this.player = new Audio();
-      this.player.src = window.URL.createObjectURL(line);
+      if (typeof line !== "undefined") {
+        this.player.src = window.URL.createObjectURL(line);
+      } else {
+        line = recordings_to_play[index]["downloadUrl"];
+        this.player.src = line;
+      }
       this.player.play();
       this.isPlaying = true;
       this.player.addEventListener(
@@ -49,14 +54,19 @@ export default {
           }
           if (index < recordings_to_play.length) {
             line = recordings_to_play[index]["recording"];
-            if (index == 0){
+            if (index == 0) {
               this.characterPrompt =
-              "Restart...playing for: " + recordings_to_play[index]["name"];
+                "Restart...playing for: " + recordings_to_play[index]["name"];
             } else {
               this.characterPrompt =
-              "Playing for: " + recordings_to_play[index]["name"];
+                "Playing for: " + recordings_to_play[index]["name"];
             }
-            this.player.src = window.URL.createObjectURL(line);
+            if (typeof line !== "undefined") {
+              this.player.src = window.URL.createObjectURL(line);
+            } else {
+              line = recordings_to_play[index]["downloadUrl"];
+              this.player.src = line;
+            }
             this.player.play();
           }
         }.bind(this)
@@ -89,7 +99,12 @@ export default {
         this.characterPrompt =
           "Playing for: " + recordings_to_play[index]["name"];
         this.player = new Audio();
-        this.player.src = window.URL.createObjectURL(line);
+        if (typeof line !== "undefined") {
+          this.player.src = window.URL.createObjectURL(line);
+        } else {
+          line = recordings_to_play[index]["downloadUrl"];
+          this.player.src = line;
+        }
         this.player.play();
         this.isPlaying = true;
         this.player.addEventListener(
@@ -135,7 +150,12 @@ export default {
                         line = recordings_to_play[index]["recording"];
                         this.characterPrompt =
                           "Playing for: " + recordings_to_play[index]["name"];
-                        this.player.src = window.URL.createObjectURL(line);
+                        if (typeof line !== "undefined") {
+                          this.player.src = window.URL.createObjectURL(line);
+                        } else {
+                          line = recordings_to_play[index]["downloadUrl"];
+                          this.player.src = line;
+                        }
                         this.player.play();
                       }
                     } else {
@@ -145,7 +165,12 @@ export default {
                       this.characterPrompt =
                         "Restart...playing for: " +
                         recordings_to_play[index]["name"];
-                      this.player.src = window.URL.createObjectURL(line);
+                      if (typeof line !== "undefined") {
+                        this.player.src = window.URL.createObjectURL(line);
+                      } else {
+                        line = recordings_to_play[index]["downloadUrl"];
+                        this.player.src = line;
+                      }
                       this.player.play();
                     }
                   }
@@ -160,7 +185,12 @@ export default {
                   this.characterPrompt =
                     "Playing for: " + recordings_to_play[index]["name"];
                 }
-                this.player.src = window.URL.createObjectURL(line);
+                if (typeof line !== "undefined") {
+                  this.player.src = window.URL.createObjectURL(line);
+                } else {
+                  line = recordings_to_play[index]["downloadUrl"];
+                  this.player.src = line;
+                }
                 this.player.play();
               }
             }
@@ -203,7 +233,12 @@ export default {
                 this.characterPrompt =
                   "Playing for: " + recordings_to_play[index]["name"];
                 this.player = new Audio();
-                this.player.src = window.URL.createObjectURL(line);
+                if (typeof line !== "undefined") {
+                  this.player.src = window.URL.createObjectURL(line);
+                } else {
+                  line = recordings_to_play[index]["downloadUrl"];
+                  this.player.src = line;
+                }
                 this.player.play();
                 this.player.addEventListener(
                   "ended",
@@ -229,7 +264,12 @@ export default {
                       line = recordings_to_play[index]["recording"];
                       this.characterPrompt =
                         "Playing for: " + recordings_to_play[index]["name"];
-                      this.player.src = window.URL.createObjectURL(line);
+                      if (typeof line !== "undefined") {
+                        this.player.src = window.URL.createObjectURL(line);
+                      } else {
+                        line = recordings_to_play[index]["downloadUrl"];
+                        this.player.src = line;
+                      }
                       this.player.play();
                     }
                   }.bind(this)
