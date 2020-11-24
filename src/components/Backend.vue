@@ -9,11 +9,19 @@
     <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
     <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
     <button @click="saveAs" type="button">Save As</button>
+    <select v-model="selectedLines">
+      <option v-for="script in scripts" v-bind:value="script.lines" :key="script.id">
+        {{ script.scriptName }} by {{script.writer}}
+      </option>
+    </select>
+    <span>Selected: {{ selectedLines }}</span>
+
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 export default {
   name: "Backend",
   data() {
@@ -21,9 +29,11 @@ export default {
       isLoggedIn: false,
       email: "email@address.com",
       password: "password",
-      scriptName: "Romeo and Juliet",
-      writer: "William Shakespeare",
+      scriptName: "Script Title",
+      writer: "Writer",
       token: null,
+      scripts: [],
+      selectedLines: []
     };
   },
   props: {
@@ -35,72 +45,82 @@ export default {
   methods: {
     saveAs() {
       axios
-        .post(
-          process.env.VUE_APP_BACKEND_URL + "scripts/",
-          {
-            scriptName: this.scriptName,
-            writer: this.writer,
-            lines: addOrder(this.list),
-          }
-        )
+        .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
+          scriptName: this.scriptName,
+          writer: this.writer,
+          lines: addOrder(this.list),
+        })
         .then(console.log)
         .catch(console.log);
     },
     logIn() {
       axios
-        .post(
-          process.env.VUE_APP_BACKEND_URL + "accounts/login/",
-          {
-            username: this.email,
-            password: this.password,
-          }
-        )
+        .post(process.env.VUE_APP_BACKEND_URL + "accounts/login/", {
+          username: this.email,
+          password: this.password,
+        })
         .then((response) => {
           this.token = response["data"]["token"];
           axios.defaults.headers.common = {
             Authorization: "Token " + this.token,
           };
           this.isLoggedIn = true;
-          this.$emit('loggedIn', this.token)
-        });
+          this.$emit("loggedIn", this.token);
+          axios
+            .get(process.env.VUE_APP_BACKEND_URL + "users/")
+            .then((response) => {
+              var currentUser = response["data"].filter(
+                (user) => user["username"] === this.email
+              );
+              var scriptEndpoints = currentUser[0]["scripts"];
+              scriptEndpoints.forEach(function (e) {
+                axios
+                  .get(e)
+                  .then((response) => {
+                    this.scripts.push({
+                      scriptName: response["data"]["scriptName"],
+                      writer: response["data"]["writer"],
+                      lines: response["data"]["lines"],
+                      id: uuidv4()
+                    });
+                  })
+                  .catch(console.log);
+              }.bind(this));
+            })
+            .catch(console.log);
+        })
+        .catch(console.log);
     },
     logOut() {
       axios
-        .post(
-          process.env.VUE_APP_BACKEND_URL + "accounts/logout/"
-        )
+        .post(process.env.VUE_APP_BACKEND_URL + "accounts/logout/")
         .then((this.isLoggedIn = false));
     },
     register() {
       axios
-        .post(
-          process.env.VUE_APP_BACKEND_URL + "accounts/register/",
-          {
-            username: this.email,
-            email: this.email,
-            password: this.password,
-          }
-        )
+        .post(process.env.VUE_APP_BACKEND_URL + "accounts/register/", {
+          username: this.email,
+          email: this.email,
+          password: this.password,
+        })
         .then(console.log)
         .catch(console.log);
     },
     reset() {
       axios
-        .post(
-          process.env.VUE_APP_BACKEND_URL + "accounts/reset-password/",
-          {
-            email: this.email,
-          }
-        )
+        .post(process.env.VUE_APP_BACKEND_URL + "accounts/reset-password/", {
+          email: this.email,
+        })
         .then(console.log)
         .catch(console.log);
     },
   },
 };
+
 function addOrder(lines) {
-  for (var i = 0; i < lines.length; i++){
-    lines[i]["order"] = i
-    }
-  return lines
+  for (var i = 0; i < lines.length; i++) {
+    lines[i]["order"] = i;
+  }
+  return lines;
 }
 </script>
