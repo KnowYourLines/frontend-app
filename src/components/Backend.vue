@@ -8,13 +8,9 @@
     <button @click="reset" type="button">Send password reset</button>
     <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
     <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
-    <button @click="saveNew" type="button">Save New</button>
+    <button @click="createScript" type="button">Create script</button>
     <select @change="scriptSelected" v-model="selectedScriptId">
-      <option
-        v-for="script in scripts"
-        :value="script.id"
-        :key="script.id"
-      >
+      <option v-for="script in scripts" :value="script.id" :key="script.id">
         {{ script.scriptName }} by {{ script.writer }} {{ script.id }}
       </option>
     </select>
@@ -48,11 +44,11 @@ export default {
   methods: {
     scriptSelected() {
       const selectedScript = this.scripts.filter(
-                (script) => script["id"] === this.selectedScriptId
-              )
+        (script) => script["id"] === this.selectedScriptId
+      );
       this.$emit("script-selected", selectedScript[0]["lines"]);
     },
-    saveNew() {
+    createScript() {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
           scriptName: this.scriptName,
@@ -76,25 +72,16 @@ export default {
           this.isLoggedIn = true;
           this.$emit("loggedIn", this.token);
           axios
-            .get(process.env.VUE_APP_BACKEND_URL + "users/")
+            .get(process.env.VUE_APP_BACKEND_URL + "scripts/")
             .then((response) => {
-              var currentUser = response["data"].filter(
-                (user) => user["username"] === this.email
-              );
-              var scriptEndpoints = currentUser[0]["scripts"];
-              scriptEndpoints.forEach(
-                function (e) {
-                  axios
-                    .get(e)
-                    .then((response) => {
-                      this.scripts.push({
-                        scriptName: response["data"]["scriptName"],
-                        writer: response["data"]["writer"],
-                        lines: response["data"]["lines"],
-                        id: uuidv4(),
-                      });
-                    })
-                    .catch(console.log);
+              response.data.forEach(
+                function (script) {
+                  this.scripts.push({
+                    scriptName: script["scriptName"],
+                    writer: script["writer"],
+                    lines: script["lines"],
+                    id: uuidv4(),
+                  });
                 }.bind(this)
               );
             })
