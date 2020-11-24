@@ -8,7 +8,7 @@
           <label>{{ name }}</label>
         </div>
       </div>
-      <backend :list="list" @loggedIn="onLogIn" />
+      <backend :list="list" @loggedIn="onLogIn" @script-selected="loadScript"/>
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
@@ -109,6 +109,9 @@ export default {
     },
   },
   methods: {
+    loadScript: function(script) {
+      this.list = script;
+    },
     onLogIn: function (token) {
       this.token = token;
     },

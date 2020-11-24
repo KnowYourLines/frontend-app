@@ -9,13 +9,16 @@
     <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
     <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
     <button @click="saveAs" type="button">Save As</button>
-    <select v-model="selectedLines">
-      <option v-for="script in scripts" v-bind:value="script.lines" :key="script.id">
-        {{ script.scriptName }} by {{script.writer}}
+    <select @change="scriptSelected" v-model="selectedScriptId">
+      <option
+        v-for="script in scripts"
+        :value="script.id"
+        :key="script.id"
+      >
+        {{ script.scriptName }} by {{ script.writer }} {{ script.id }}
       </option>
     </select>
-    <span>Selected: {{ selectedLines }}</span>
-
+    <span>Selected: {{ selectedScriptId }}</span>
   </div>
 </template>
 
@@ -33,7 +36,7 @@ export default {
       writer: "Writer",
       token: null,
       scripts: [],
-      selectedLines: []
+      selectedScriptId: null,
     };
   },
   props: {
@@ -43,6 +46,12 @@ export default {
     },
   },
   methods: {
+    scriptSelected() {
+      const selectedScript = this.scripts.filter(
+                (script) => script["id"] === this.selectedScriptId
+              )
+      this.$emit("script-selected", selectedScript[0]["lines"]);
+    },
     saveAs() {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
@@ -73,19 +82,21 @@ export default {
                 (user) => user["username"] === this.email
               );
               var scriptEndpoints = currentUser[0]["scripts"];
-              scriptEndpoints.forEach(function (e) {
-                axios
-                  .get(e)
-                  .then((response) => {
-                    this.scripts.push({
-                      scriptName: response["data"]["scriptName"],
-                      writer: response["data"]["writer"],
-                      lines: response["data"]["lines"],
-                      id: uuidv4()
-                    });
-                  })
-                  .catch(console.log);
-              }.bind(this));
+              scriptEndpoints.forEach(
+                function (e) {
+                  axios
+                    .get(e)
+                    .then((response) => {
+                      this.scripts.push({
+                        scriptName: response["data"]["scriptName"],
+                        writer: response["data"]["writer"],
+                        lines: response["data"]["lines"],
+                        id: uuidv4(),
+                      });
+                    })
+                    .catch(console.log);
+                }.bind(this)
+              );
             })
             .catch(console.log);
         })
@@ -94,7 +105,11 @@ export default {
     logOut() {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "accounts/logout/")
-        .then((this.isLoggedIn = false));
+        .then(() => {
+          this.isLoggedIn = false;
+          this.selectedLines = [];
+          this.scripts = [];
+        });
     },
     register() {
       axios
