@@ -1,9 +1,8 @@
 ### Todo
 
 #### Backend integration
-- [ ] Script update, add order, via script detail endpoint
 - [ ] Script delete, via script detail endpoint
-- [ ] Script load, via script endpoint, handle logout, save as/update/delete
+- [ ] Script load, via script endpoint, create/update/delete
 - [ ] Audio Player loading from download url
 - [ ] Styling
 

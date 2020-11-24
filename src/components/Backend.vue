@@ -8,19 +8,18 @@
     <button @click="reset" type="button">Send password reset</button>
     <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
     <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
-    <button @click="createScript" type="button">Create script</button>
+    <button @click="saveAsNew" type="button">Save as new</button>
     <select @change="scriptSelected" v-model="selectedScriptId">
       <option v-for="script in scripts" :value="script.id" :key="script.id">
         {{ script.scriptName }} by {{ script.writer }} {{ script.id }}
       </option>
     </select>
-    <span>Selected: {{ selectedScriptId }}</span>
+    <button @click="saveChanges" type="button">Save changes</button>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 export default {
   name: "Backend",
   data() {
@@ -42,13 +41,23 @@ export default {
     },
   },
   methods: {
+    saveChanges() {
+      axios
+        .patch(process.env.VUE_APP_BACKEND_URL + "scripts/" + this.selectedScriptId + "/", {
+          scriptName: this.scriptName,
+          writer: this.writer,
+          lines: addOrder(this.list),
+        })
+        .then(console.log)
+        .catch(console.log);
+    },
     scriptSelected() {
       const selectedScript = this.scripts.filter(
         (script) => script["id"] === this.selectedScriptId
       );
       this.$emit("script-selected", selectedScript[0]["lines"]);
     },
-    createScript() {
+    saveAsNew() {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
           scriptName: this.scriptName,
@@ -80,7 +89,7 @@ export default {
                     scriptName: script["scriptName"],
                     writer: script["writer"],
                     lines: script["lines"],
-                    id: uuidv4(),
+                    id: script["id"],
                   });
                 }.bind(this)
               );
