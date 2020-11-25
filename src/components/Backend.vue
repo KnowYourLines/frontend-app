@@ -75,9 +75,10 @@ export default {
         .catch(console.log);
     },
     saveChanges() {
-      var lines = addLineIdNewLines(addOrder(this.list));
+      var lines = addOrder(this.list);
       lines.forEach((line) => {
         if (!line["uploaded"]) {
+          line["lineId"] = uuidv4();
           uploadLine(line);
           line["uploaded"] = true;
         }
@@ -107,9 +108,10 @@ export default {
       this.$emit("script-selected", selectedScript[0]["lines"]);
     },
     saveAsNew() {
-      var lines = addLineIdNewLines(addOrder(this.list));
+      var lines = addOrder(this.list);
       lines.forEach((line) => {
         if (!line["uploaded"]) {
+          line["lineId"] = uuidv4();
           uploadLine(line);
           line["uploaded"] = true;
         }
@@ -179,14 +181,6 @@ function addOrder(lines) {
   }
   return lines;
 }
-function addLineIdNewLines(lines) {
-  for (var i = 0; i < lines.length; i++) {
-    if (!lines[i]["uploaded"]) {
-      lines[i]["lineId"] = uuidv4();
-    }
-  }
-  return lines;
-}
 function uploadLine(line) {
   axios
     .get(
@@ -199,7 +193,6 @@ function uploadLine(line) {
         postData.append(key, response["data"]["s3Request"]["fields"][key]);
       }
       postData.append("file", line["recording"]);
-      console.log(postData.get("file"))
       axios
         .post(postUrl, postData, { headers: { Authorization: "" } })
         .catch(function (error) {
