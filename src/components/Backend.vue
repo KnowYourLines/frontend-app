@@ -75,9 +75,12 @@ export default {
         .catch(console.log);
     },
     saveChanges() {
-      var lines = addLineId(addOrder(this.list));
+      var lines = addLineIdNewLines(addOrder(this.list));
       lines.forEach((line) => {
-        uploadLine(line);
+        if (!line["uploaded"]) {
+          uploadLine(line);
+          line["uploaded"] = true;
+        }
       });
       axios
         .patch(
@@ -104,9 +107,12 @@ export default {
       this.$emit("script-selected", selectedScript[0]["lines"]);
     },
     saveAsNew() {
-      var lines = addLineId(addOrder(this.list));
+      var lines = addLineIdNewLines(addOrder(this.list));
       lines.forEach((line) => {
-        uploadLine(line);
+        if (!line["uploaded"]) {
+          uploadLine(line);
+          line["uploaded"] = true;
+        }
       });
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
@@ -173,46 +179,43 @@ function addOrder(lines) {
   }
   return lines;
 }
-function addLineId(lines) {
+function addLineIdNewLines(lines) {
   for (var i = 0; i < lines.length; i++) {
-    lines[i]["lineId"] = uuidv4();
+    if (!lines[i]["uploaded"]) {
+      lines[i]["lineId"] = uuidv4();
+    }
   }
   return lines;
 }
 function uploadLine(line) {
-  if (!line["uploaded"]) {
-    axios
-      .get(
-        process.env.VUE_APP_BACKEND_URL +
-          "get_upload_url/" +
-          line["lineId"] +
-          "/"
-      )
-      .then((response) => {
-        var postUrl = response["data"]["s3Request"]["url"];
-        var postData = new FormData();
-        for (var key in response["data"]["s3Request"]["fields"]) {
-          postData.append(key, response["data"]["s3Request"]["fields"][key]);
-        }
-        postData.append("file", line["recording"]);
-        axios
-          .post(postUrl, postData, { headers: { Authorization: "" } })
-          .then((line["uploaded"] = true))
-          .catch(function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            }
-          });
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
-  }
+  axios
+    .get(
+      process.env.VUE_APP_BACKEND_URL + "get_upload_url/" + line["lineId"] + "/"
+    )
+    .then((response) => {
+      var postUrl = response["data"]["s3Request"]["url"];
+      var postData = new FormData();
+      for (var key in response["data"]["s3Request"]["fields"]) {
+        postData.append(key, response["data"]["s3Request"]["fields"][key]);
+      }
+      postData.append("file", line["recording"]);
+      console.log(postData.get("file"))
+      axios
+        .post(postUrl, postData, { headers: { Authorization: "" } })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    })
+    .catch(function (error) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
 }
 </script>
