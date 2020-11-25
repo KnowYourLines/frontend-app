@@ -6,8 +6,11 @@
     </div>
     <audio-list
       :isPlaying="isPlaying"
+      :stayingLoggedIn="stayLoggedIn"
+      :stayingLoggedInDetails="loginDetails"
       @play-nonstop="playAll"
       @play-on-cue="playOnCue"
+      @stay-logged-in="loggedIn"
     />
   </div>
 </template>
@@ -25,9 +28,15 @@ export default {
       characterPrompt: "",
       speechHeard: "",
       cuePrompt: "",
+      stayLoggedIn: false,
+      loginDetails: {},
     };
   },
   methods: {
+    loggedIn: function (details){
+      this.stayLoggedIn = true;
+      this.loginDetails = details
+    },
     playAll: function (recordings) {
       var recordings_to_play = recordings.filter(
         (recording) => recording.shouldPlay

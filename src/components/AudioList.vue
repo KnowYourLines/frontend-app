@@ -8,7 +8,7 @@
           <label>{{ name }}</label>
         </div>
       </div>
-      <backend :list="list" @loggedIn="onLogIn" @script-selected="loadScript"/>
+      <backend :list="list" :alreadyLoggedIn="stayingLoggedIn" :alreadyLoggedInDetails="stayingLoggedInDetails" @logged-in="onLogIn" @script-selected="loadScript"/>
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
@@ -93,13 +93,20 @@ export default {
       list: [],
       isEditing: false,
       selectedCharacters: [],
-      token: null,
     };
   },
   props: {
     isPlaying: {
       type: Boolean,
       required: true,
+    },
+    stayingLoggedIn: {
+      type: Boolean,
+      required: true,
+    },
+    stayingLoggedInDetails: {
+      type: Object,
+      required: true
     },
   },
   computed: {
@@ -111,8 +118,8 @@ export default {
     loadScript: function(script) {
       this.list = script;
     },
-    onLogIn: function (token) {
-      this.token = token;
+    onLogIn: function (loginDetails) {
+      this.$emit("stay-logged-in", loginDetails);
     },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);

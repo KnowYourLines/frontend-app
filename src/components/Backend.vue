@@ -41,6 +41,26 @@ export default {
       type: Array,
       required: true,
     },
+    alreadyLoggedIn: {
+      type: Boolean,
+      required: true,
+    },
+    alreadyLoggedInDetails: {
+      type: Object,
+      required: true,
+    },
+  },
+  mounted() {
+    this.isLoggedIn = this.alreadyLoggedIn;
+    if (this.isLoggedIn) {
+      this.email = this.alreadyLoggedInDetails["email"];
+      this.password = this.alreadyLoggedInDetails["password"];
+      this.token = this.alreadyLoggedInDetails["token"];
+      axios.defaults.headers.common = {
+        Authorization: "Token " + this.token,
+      };
+      this.loadScripts();
+    }
   },
   methods: {
     loadScripts() {
@@ -126,7 +146,11 @@ export default {
             Authorization: "Token " + this.token,
           };
           this.isLoggedIn = true;
-          this.$emit("loggedIn", this.token);
+          this.$emit("logged-in", {
+            token: this.token,
+            email: this.email,
+            password: this.password,
+          });
           this.loadScripts();
         })
         .catch(console.log);
