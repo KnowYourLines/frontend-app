@@ -1,6 +1,7 @@
 ### Todo
 
 #### Backend integration
+- [ ] Error messaging
 - [ ] Styling
 
 #### Best practices

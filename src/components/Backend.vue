@@ -4,18 +4,21 @@
     <input type="text" autocomplete="on" v-model.lazy.trim="password" />
     <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
     <button v-else-if="isLoggedIn" @click="logOut" type="button">Logout</button>
-    <button @click="register" type="button">Send registration</button>
-    <button @click="reset" type="button">Send password reset</button>
+    <button @click="register" type="button">Email account activation</button>
+    <button @click="reset" type="button">Email password reset</button>
     <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
     <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
     <button @click="saveAsNew" type="button">Save as new</button>
     <select @change="scriptSelected" v-model="selectedScriptId">
       <option v-for="script in scripts" :value="script.id" :key="script.id">
-        {{ script.scriptName }} by {{ script.writer }} {{ script.id }}
+        {{ script.scriptName }} by {{ script.writer }}
       </option>
     </select>
     <button @click="saveChanges" type="button">Save changes</button>
     <button @click="deleteScript" type="button">Delete script</button>
+    <ul v-if="errorData">
+        {{ errorData }}
+    </ul>
   </div>
 </template>
 
@@ -34,6 +37,7 @@ export default {
       token: null,
       scripts: [],
       selectedScriptId: null,
+      errorData: null,
     };
   },
   props: {
@@ -153,7 +157,14 @@ export default {
           });
           this.loadScripts();
         })
-        .catch(console.log);
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            this.errorData = error.response.data;
+          }
+        }.bind(this));
     },
     logOut() {
       axios
