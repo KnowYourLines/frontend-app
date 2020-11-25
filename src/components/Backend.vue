@@ -75,14 +75,7 @@ export default {
         .catch(console.log);
     },
     saveChanges() {
-      var lines = addOrder(this.list);
-      lines.forEach((line) => {
-        if (!line["uploaded"]) {
-          line["lineId"] = uuidv4();
-          uploadLine(line);
-          line["uploaded"] = true;
-        }
-      });
+      var lines = prepareLinesForSave(this.list);
       axios
         .patch(
           process.env.VUE_APP_BACKEND_URL +
@@ -108,14 +101,7 @@ export default {
       this.$emit("script-selected", selectedScript[0]["lines"]);
     },
     saveAsNew() {
-      var lines = addOrder(this.list);
-      lines.forEach((line) => {
-        if (!line["uploaded"]) {
-          line["lineId"] = uuidv4();
-          uploadLine(line);
-          line["uploaded"] = true;
-        }
-      });
+      var lines = prepareLinesForSave(this.list);
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
           scriptName: this.scriptName,
@@ -174,7 +160,17 @@ export default {
     },
   },
 };
-
+function prepareLinesForSave(lines) {
+  const result = addOrder(lines);
+  result.forEach((line) => {
+    if (!line["uploaded"]) {
+      line["lineId"] = uuidv4();
+      uploadLine(line);
+      line["uploaded"] = true;
+    }
+  });
+  return result;
+}
 function addOrder(lines) {
   for (var i = 0; i < lines.length; i++) {
     lines[i]["order"] = i;
