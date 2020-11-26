@@ -1,24 +1,59 @@
 <template>
   <div>
-    <input type="text" autocomplete="on" v-model.lazy.trim="email" />
-    <input type="text" autocomplete="on" v-model.lazy.trim="password" />
-    <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
-    <button v-else-if="isLoggedIn" @click="logOut" type="button">Logout</button>
-    <button @click="register" type="button">Email account activation</button>
-    <button @click="reset" type="button">Email password reset</button>
-    <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
-    <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
-    <button @click="saveAsNew" type="button">Save as new</button>
-    <select @change="scriptSelected" v-model="selectedScriptId">
-      <option v-for="script in scripts" :value="script.id" :key="script.id">
-        {{ script.scriptName }} by {{ script.writer }}
-      </option>
-    </select>
-    <button @click="saveChanges" type="button">Save changes</button>
-    <button @click="deleteScript" type="button">Delete script</button>
-    <ul v-if="errorData">
-        {{ errorData }}
-    </ul>
+    <div class="bar">
+      <div class="signup">
+        <div class="signup-input">
+          <input type="text" autocomplete="on" v-model.lazy.trim="email" />
+          <input type="text" autocomplete="on" v-model.lazy.trim="password" />
+        </div>
+        <div class="signup-btn-group">
+          <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
+          <button v-else-if="isLoggedIn" @click="logOut" type="button">
+            Logout
+          </button>
+          <button @click="register" type="button">
+            Email account activation
+          </button>
+          <button @click="reset" type="button">Email password reset</button>
+        </div>
+      </div>
+      <div class="create">
+        <div class="create-input">
+          <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
+          <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
+        </div>
+        <div class="create-btn-group">
+          <button @click="saveAsNew" type="button">Save as new</button>
+        </div>
+              <div class="error-message">
+        <ul v-if="errorData">
+          {{
+            errorData
+          }}
+        </ul>
+      </div>
+      </div>
+      <div class="update">
+        <div class="update-input">
+          <select @change="scriptSelected" v-model="selectedScriptId">
+            <option :value="null" selected disabled hidden>
+              Select your script here...
+            </option>
+            <option
+              v-for="script in scripts"
+              :value="script.id"
+              :key="script.id"
+            >
+              {{ script.scriptName }} by {{ script.writer }}
+            </option>
+          </select>
+        </div>
+        <div class="update-btn-group">
+          <button @click="saveChanges" type="button">Save changes</button>
+          <button @click="deleteScript" type="button">Delete script</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -157,14 +192,16 @@ export default {
           });
           this.loadScripts();
         })
-        .catch(function (error) {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-            this.errorData = error.response.data;
-          }
-        }.bind(this));
+        .catch(
+          function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              this.errorData = error.response.data;
+            }
+          }.bind(this)
+        );
     },
     logOut() {
       axios
@@ -243,3 +280,109 @@ function uploadLine(line) {
     });
 }
 </script>
+<style scoped>
+.bar {
+  display:grid;
+  margin-bottom: 1em;
+}
+.signup {
+  display: grid;
+  grid-column:1;
+  grid-row:1;
+}
+.signup-btn-group {
+  grid-row: 2;
+}
+.signup-btn-group button {
+  font-size: 15px;
+  background: transparent;
+  border: 4px solid #099237;
+  border-radius: 4px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  color: #099237;
+}
+.signup-btn-group button:hover,
+.signup-btn-group button:focus {
+  background: #099237;
+  color: #fff;
+}
+.signup-input input[type="text"] {
+  font-size: 15px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border-color: #ccc;
+  grid-column: 1;
+  grid-row: 1;
+  background-color: #099237;
+  color: white;
+}
+.create {
+  display: grid;
+  grid-column:2;
+  grid-row:1;
+}
+.create-btn-group {
+  grid-column: 2;
+  grid-row: 1;
+}
+.create-btn-group button {
+  font-size: 15px;
+  background: transparent;
+  border: 4px solid #00968e;
+  border-radius: 4px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  color: #00968e;
+}
+.create-btn-group button:hover,
+.create-btn-group button:focus {
+  background: #00968e;
+  color: #fff;
+}
+.create-input input[type="text"] {
+  font-size: 15px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border-color: #ccc;
+  grid-column: 1;
+  grid-row: 1;
+  background-color: #00968e;
+  color: white;
+}
+.update {
+  display: grid;
+  grid-column:3;
+  grid-row:1;
+}
+.update-btn-group {
+  grid-column: 2;
+  grid-row: 1;
+}
+.update-btn-group button {
+  font-size: 15px;
+  background: transparent;
+  border: 4px solid #df6c00;
+  border-radius: 4px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  color: #df6c00;
+}
+.update-btn-group button:hover,
+.update-btn-group button:focus {
+  background: #df6c00;
+  color: #fff;
+}
+.update-input select {
+  font-size: 15px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border-color: #ccc;
+  background-color: #df6c00;
+  color: white;
+  width: 100%;
+}
+</style>

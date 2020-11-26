@@ -1,5 +1,12 @@
 <template>
   <div v-if="!isPlaying">
+    <meta name="viewport" content="width=900" />
+    <backend
+      :list="list"
+      :alreadyLoggedIn="stayingLoggedIn"
+      :alreadyLoggedInDetails="stayingLoggedInDetails"
+      @logged-in="onLogIn"
+    />
     <div class="container">
       <audio-recorder @recording-done="recordingDone" />
       <div class="selection">
@@ -8,7 +15,6 @@
           <label>{{ name }}</label>
         </div>
       </div>
-      <backend :list="list" :alreadyLoggedIn="stayingLoggedIn" :alreadyLoggedInDetails="stayingLoggedInDetails" @logged-in="onLogIn" @script-selected="loadScript"/>
     </div>
     <div class="selected-btn-group">
       <button type="button" class="btn" @click="playCharacters">
@@ -106,7 +112,7 @@ export default {
     },
     stayingLoggedInDetails: {
       type: Object,
-      required: true
+      required: true,
     },
   },
   computed: {
@@ -115,7 +121,7 @@ export default {
     },
   },
   methods: {
-    loadScript: function(script) {
+    loadScript: function (script) {
       this.list = script;
     },
     onLogIn: function (loginDetails) {
@@ -182,6 +188,8 @@ label {
 
 .container {
   display: flex;
+  width: 50%;
+  margin: 0 auto;
 }
 
 .selection {
