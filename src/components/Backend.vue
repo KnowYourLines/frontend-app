@@ -17,9 +17,7 @@
           />
         </div>
         <div class="signup-btn-group">
-          <button v-if="!isLoggedIn" @click="logIn" type="button">
-            Login
-          </button>
+          <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
           <button v-else-if="isLoggedIn" @click="logOut" type="button">
             Logout
           </button>
@@ -118,6 +116,12 @@ export default {
     }
   },
   methods: {
+    catchError(error){
+      if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+    }},
     loadScripts() {
       axios
         .get(process.env.VUE_APP_BACKEND_URL + "scripts/")
@@ -133,11 +137,7 @@ export default {
           );
         })
         .catch(function (error) {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          }
+          this.catchError(error)
         });
     },
     deleteScript() {
@@ -154,29 +154,7 @@ export default {
         })
         .catch(
           function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              if (error.response.status == 403) {
-                let emailNormalColour = this.$refs.email.style.backgroundColor;
-                let passwordNormalColour = this.$refs.email.style
-                  .backgroundColor;
-                this.$refs.email.style.backgroundColor = "red";
-                this.$refs.password.style.backgroundColor = "red";
-                setTimeout(() => {
-                  this.$refs.email.style.backgroundColor = emailNormalColour;
-                  this.$refs.password.style.backgroundColor = passwordNormalColour;
-                }, 500);
-              } else {
-                let scriptSelectNormalColour = this.$refs.scriptSelect.style
-                  .backgroundColor;
-                this.$refs.scriptSelect.style.backgroundColor = "red";
-                setTimeout(() => {
-                  this.$refs.scriptSelect.style.backgroundColor = scriptSelectNormalColour;
-                }, 500);
-              }
-            }
+            this.catchErrorAndBlink(error, this.blinkScriptUpdate)
           }.bind(this)
         );
     },
@@ -198,31 +176,21 @@ export default {
         })
         .catch(
           function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              if (error.response.status == 403) {
-                let emailNormalColour = this.$refs.email.style.backgroundColor;
-                let passwordNormalColour = this.$refs.email.style
-                  .backgroundColor;
-                this.$refs.email.style.backgroundColor = "red";
-                this.$refs.password.style.backgroundColor = "red";
-                setTimeout(() => {
-                  this.$refs.email.style.backgroundColor = emailNormalColour;
-                  this.$refs.password.style.backgroundColor = passwordNormalColour;
-                }, 500);
-              } else {
-                let scriptSelectNormalColour = this.$refs.scriptSelect.style
-                  .backgroundColor;
-                this.$refs.scriptSelect.style.backgroundColor = "red";
-                setTimeout(() => {
-                  this.$refs.scriptSelect.style.backgroundColor = scriptSelectNormalColour;
-                }, 500);
-              }
-            }
+            this.catchErrorAndBlink(error, this.blinkScriptUpdate)
           }.bind(this)
         );
+    },
+    blinkScriptUpdate(error) {
+      if (error.response.status == 403) {
+        this.blinkLogIn();
+      } else {
+        let scriptSelectNormalColour = this.$refs.scriptSelect.style
+          .backgroundColor;
+        this.$refs.scriptSelect.style.backgroundColor = "red";
+        setTimeout(() => {
+          this.$refs.scriptSelect.style.backgroundColor = scriptSelectNormalColour;
+        }, 500);
+      }
     },
     scriptSelected() {
       const selectedScript = this.scripts.filter(
@@ -246,31 +214,29 @@ export default {
         })
         .catch(
           function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              if (error.response.status == 403) {
-                let emailNormalColour = this.$refs.email.style.backgroundColor;
-                let passwordNormalColour = this.$refs.email.style
-                  .backgroundColor;
-                this.$refs.email.style.backgroundColor = "red";
-                this.$refs.password.style.backgroundColor = "red";
-                setTimeout(() => {
-                  this.$refs.email.style.backgroundColor = emailNormalColour;
-                  this.$refs.password.style.backgroundColor = passwordNormalColour;
-                }, 500);
-              } else {
-                let scriptNameNormalColour = this.$refs.scriptName.style
-                  .backgroundColor;
-                this.$refs.scriptName.style.backgroundColor = "red";
-                setTimeout(() => {
-                  this.$refs.scriptName.style.backgroundColor = scriptNameNormalColour;
-                }, 500);
-              }
-            }
+            this.catchErrorAndBlink(error, this.blinkSaveNew);
           }.bind(this)
         );
+    },
+    catchErrorAndBlink(error, blinker) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        blinker(error);
+      }
+    },
+    blinkSaveNew(error) {
+      if (error.response.status == 403) {
+        this.blinkLogIn();
+      } else {
+        let scriptNameNormalColour = this.$refs.scriptName.style
+          .backgroundColor;
+        this.$refs.scriptName.style.backgroundColor = "red";
+        setTimeout(() => {
+          this.$refs.scriptName.style.backgroundColor = scriptNameNormalColour;
+        }, 500);
+      }
     },
     logIn() {
       axios
@@ -293,21 +259,19 @@ export default {
         })
         .catch(
           function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              let emailNormalColour = this.$refs.email.style.backgroundColor;
-              let passwordNormalColour = this.$refs.email.style.backgroundColor;
-              this.$refs.email.style.backgroundColor = "red";
-              this.$refs.password.style.backgroundColor = "red";
-              setTimeout(() => {
-                this.$refs.email.style.backgroundColor = emailNormalColour;
-                this.$refs.password.style.backgroundColor = passwordNormalColour;
-              }, 500);
-            }
+            this.catchErrorAndBlink(error, this.blinkLogIn);
           }.bind(this)
         );
+    },
+    blinkLogIn() {
+      let emailNormalColour = this.$refs.email.style.backgroundColor;
+      let passwordNormalColour = this.$refs.email.style.backgroundColor;
+      this.$refs.email.style.backgroundColor = "red";
+      this.$refs.password.style.backgroundColor = "red";
+      setTimeout(() => {
+        this.$refs.email.style.backgroundColor = emailNormalColour;
+        this.$refs.password.style.backgroundColor = passwordNormalColour;
+      }, 500);
     },
     logOut() {
       axios
@@ -329,18 +293,16 @@ export default {
         })
         .catch(
           function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              let emailNormalColour = this.$refs.email.style.backgroundColor;
-              this.$refs.email.style.backgroundColor = "red";
-              setTimeout(() => {
-                this.$refs.email.style.backgroundColor = emailNormalColour;
-              }, 500);
-            }
+            this.catchErrorAndBlink(error, this.blinkEmail);
           }.bind(this)
         );
+    },
+    blinkEmail() {
+      let emailNormalColour = this.$refs.email.style.backgroundColor;
+      this.$refs.email.style.backgroundColor = "red";
+      setTimeout(() => {
+        this.$refs.email.style.backgroundColor = emailNormalColour;
+      }, 500);
     },
     reset() {
       axios
@@ -349,16 +311,7 @@ export default {
         })
         .catch(
           function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-              let emailNormalColour = this.$refs.email.style.backgroundColor;
-              this.$refs.email.style.backgroundColor = "red";
-              setTimeout(() => {
-                this.$refs.email.style.backgroundColor = emailNormalColour;
-              }, 500);
-            }
+            this.catchErrorAndBlink(error, this.blinkEmail);
           }.bind(this)
         );
     },

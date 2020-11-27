@@ -1,7 +1,6 @@
 ### Todo
 
 #### Backend integration
-- [ ] refactor
 - [ ] mobile?
 
 #### Best practices
