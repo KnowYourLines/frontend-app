@@ -11,7 +11,7 @@
     />
     <div class="container">
       <audio-recorder @recording-done="recordingDone" />
-      <div class="selection">
+      <div class="selection" ref="selection">
         <div v-for="name in uniqCharacters" :key="name">
           <input type="checkbox" v-model="selectedCharacters" :value="name" />
           <label>{{ name }}</label>
@@ -155,6 +155,13 @@ export default {
       this.$emit("play-nonstop", this.list);
     },
     playCharacters: function () {
+      if (this.selectedCharacters.length == 0) {
+        let normal = this.$refs.selection.style.backgroundColor;
+        this.$refs.selection.style.backgroundColor = "red";
+        setTimeout(() => {
+          this.$refs.selection.style.backgroundColor = normal;
+        }, 500);
+      }
       this.$emit("play-on-cue", this.list, this.selectedCharacters);
     },
     deletion(id) {
@@ -162,12 +169,21 @@ export default {
       this.list.splice(lineIndex, 1);
     },
     toggleToItemEditForm() {
-      this.isEditing = true;
+      if (this.list.length > 0) {
+        this.isEditing = true;
+      }
     },
     editDone() {
       this.isEditing = false;
     },
     muteSelected() {
+      if (this.selectedCharacters.length == 0) {
+        let normal = this.$refs.selection.style.backgroundColor;
+        this.$refs.selection.style.backgroundColor = "red";
+        setTimeout(() => {
+          this.$refs.selection.style.backgroundColor = normal;
+        }, 500);
+      }
       this.list.forEach((line) => {
         if (this.selectedCharacters.includes(line.name)) {
           line.shouldPlay = false;
@@ -175,6 +191,13 @@ export default {
       });
     },
     unmuteSelected() {
+      if (this.selectedCharacters.length == 0) {
+        let normal = this.$refs.selection.style.backgroundColor;
+        this.$refs.selection.style.backgroundColor = "red";
+        setTimeout(() => {
+          this.$refs.selection.style.backgroundColor = normal;
+        }, 500);
+      }
       this.list.forEach((line) => {
         if (this.selectedCharacters.includes(line.name)) {
           line.shouldPlay = true;
