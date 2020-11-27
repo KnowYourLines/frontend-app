@@ -1,7 +1,6 @@
 ### Todo
 
 #### Backend integration
-- [ ] blink on error
 - [ ] refactor
 - [ ] mobile?
 

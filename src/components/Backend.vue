@@ -17,7 +17,9 @@
           />
         </div>
         <div class="signup-btn-group">
-          <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
+          <button v-if="!isLoggedIn" @click="logIn" type="button">
+            Login
+          </button>
           <button v-else-if="isLoggedIn" @click="logOut" type="button">
             Logout
           </button>
@@ -426,15 +428,15 @@ function uploadLine(line) {
 .signup-btn-group button {
   font-size: 15px;
   background: transparent;
-  border: 4px solid #099237;
+  border: 4px solid #00968e;
   border-radius: 4px;
   transition: all 0.4s ease 0s;
   cursor: pointer;
-  color: #099237;
+  color: #00968e;
 }
 .signup-btn-group button:hover,
 .signup-btn-group button:focus {
-  background: #099237;
+  background: #00968e;
   color: #fff;
 }
 .signup-input input[type="text"] {
@@ -445,7 +447,7 @@ function uploadLine(line) {
   border-color: #ccc;
   grid-column: 1;
   grid-row: 1;
-  background-color: #099237;
+  background-color: #00968e;
   color: white;
 }
 .create {
@@ -493,15 +495,15 @@ function uploadLine(line) {
 .update-btn-group button {
   font-size: 15px;
   background: transparent;
-  border: 4px solid #df6c00;
+  border: 4px solid #00968e;
   border-radius: 4px;
   transition: all 0.4s ease 0s;
   cursor: pointer;
-  color: #df6c00;
+  color: #00968e;
 }
 .update-btn-group button:hover,
 .update-btn-group button:focus {
-  background: #df6c00;
+  background: #00968e;
   color: #fff;
 }
 .update-input select {
@@ -510,7 +512,7 @@ function uploadLine(line) {
   -webkit-border-radius: 5px;
   border-radius: 5px;
   border-color: #ccc;
-  background-color: #df6c00;
+  background-color: #00968e;
   color: white;
   width: 100%;
 }
