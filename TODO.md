@@ -1,8 +1,9 @@
 ### Todo
 
 #### Backend integration
-- [ ] Error messaging
-- [ ] Mobile?
+- [ ] blink on error
+- [ ] refactor
+- [ ] mobile?
 
 #### Best practices
 - [ ] e2e tests

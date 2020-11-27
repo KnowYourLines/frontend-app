@@ -3,8 +3,18 @@
     <div class="bar">
       <div class="signup">
         <div class="signup-input">
-          <input type="text" autocomplete="on" v-model.lazy.trim="email" />
-          <input type="text" autocomplete="on" v-model.lazy.trim="password" />
+          <input
+            type="text"
+            autocomplete="on"
+            v-model.lazy.trim="email"
+            ref="email"
+          />
+          <input
+            type="text"
+            autocomplete="on"
+            v-model.lazy.trim="password"
+            ref="password"
+          />
         </div>
         <div class="signup-btn-group">
           <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
@@ -19,22 +29,24 @@
       </div>
       <div class="create">
         <div class="create-input">
-          <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
+          <input
+            type="text"
+            autocomplete="on"
+            v-model.lazy.trim="scriptName"
+            ref="scriptName"
+          />
         </div>
         <div class="create-btn-group">
           <button @click="saveAsNew" type="button">Save as new</button>
         </div>
-              <div class="error-message">
-        <ul v-if="errorData">
-          {{
-            errorData
-          }}
-        </ul>
-      </div>
       </div>
       <div class="update">
         <div class="update-input">
-          <select @change="scriptSelected" v-model="selectedScriptId">
+          <select
+            @change="scriptSelected"
+            v-model="selectedScriptId"
+            ref="scriptSelect"
+          >
             <option :value="null" selected disabled hidden>
               Select your script here...
             </option>
@@ -70,7 +82,6 @@ export default {
       token: null,
       scripts: [],
       selectedScriptId: null,
-      errorData: null,
     };
   },
   props: {
@@ -89,7 +100,7 @@ export default {
     alreadySavedScriptId: {
       type: Number,
       required: true,
-    }
+    },
   },
   mounted() {
     this.isLoggedIn = this.alreadyLoggedIn;
@@ -133,7 +144,33 @@ export default {
           this.scripts = [];
           this.loadScripts();
         })
-        .catch(console.log);
+        .catch(
+          function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              if (error.response.status == 403) {
+                let emailNormalColour = this.$refs.email.style.backgroundColor;
+                let passwordNormalColour = this.$refs.email.style
+                  .backgroundColor;
+                this.$refs.email.style.backgroundColor = "red";
+                this.$refs.password.style.backgroundColor = "red";
+                setTimeout(() => {
+                  this.$refs.email.style.backgroundColor = emailNormalColour;
+                  this.$refs.password.style.backgroundColor = passwordNormalColour;
+                }, 500);
+              } else {
+                let scriptSelectNormalColour = this.$refs.scriptSelect.style
+                  .backgroundColor;
+                this.$refs.scriptSelect.style.backgroundColor = "red";
+                setTimeout(() => {
+                  this.$refs.scriptSelect.style.backgroundColor = scriptSelectNormalColour;
+                }, 500);
+              }
+            }
+          }.bind(this)
+        );
     },
     saveChanges() {
       var lines = prepareLinesForSave(this.list);
@@ -151,13 +188,42 @@ export default {
           this.scripts = [];
           this.loadScripts();
         })
-        .catch(console.log);
+        .catch(
+          function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              if (error.response.status == 403) {
+                let emailNormalColour = this.$refs.email.style.backgroundColor;
+                let passwordNormalColour = this.$refs.email.style
+                  .backgroundColor;
+                this.$refs.email.style.backgroundColor = "red";
+                this.$refs.password.style.backgroundColor = "red";
+                setTimeout(() => {
+                  this.$refs.email.style.backgroundColor = emailNormalColour;
+                  this.$refs.password.style.backgroundColor = passwordNormalColour;
+                }, 500);
+              } else {
+                let scriptSelectNormalColour = this.$refs.scriptSelect.style
+                  .backgroundColor;
+                this.$refs.scriptSelect.style.backgroundColor = "red";
+                setTimeout(() => {
+                  this.$refs.scriptSelect.style.backgroundColor = scriptSelectNormalColour;
+                }, 500);
+              }
+            }
+          }.bind(this)
+        );
     },
     scriptSelected() {
       const selectedScript = this.scripts.filter(
         (script) => script["id"] === this.selectedScriptId
       );
-      this.$emit("script-selected", {lines: selectedScript[0]["lines"], id: selectedScript[0]["id"]});
+      this.$emit("script-selected", {
+        lines: selectedScript[0]["lines"],
+        id: selectedScript[0]["id"],
+      });
     },
     saveAsNew() {
       var lines = prepareLinesForSave(this.list);
@@ -170,7 +236,33 @@ export default {
           this.scripts = [];
           this.loadScripts();
         })
-        .catch(console.log);
+        .catch(
+          function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              if (error.response.status == 403) {
+                let emailNormalColour = this.$refs.email.style.backgroundColor;
+                let passwordNormalColour = this.$refs.email.style
+                  .backgroundColor;
+                this.$refs.email.style.backgroundColor = "red";
+                this.$refs.password.style.backgroundColor = "red";
+                setTimeout(() => {
+                  this.$refs.email.style.backgroundColor = emailNormalColour;
+                  this.$refs.password.style.backgroundColor = passwordNormalColour;
+                }, 500);
+              } else {
+                let scriptNameNormalColour = this.$refs.scriptName.style
+                  .backgroundColor;
+                this.$refs.scriptName.style.backgroundColor = "red";
+                setTimeout(() => {
+                  this.$refs.scriptName.style.backgroundColor = scriptNameNormalColour;
+                }, 500);
+              }
+            }
+          }.bind(this)
+        );
     },
     logIn() {
       axios
@@ -197,7 +289,14 @@ export default {
               console.log(error.response.data);
               console.log(error.response.status);
               console.log(error.response.headers);
-              this.errorData = error.response.data;
+              let emailNormalColour = this.$refs.email.style.backgroundColor;
+              let passwordNormalColour = this.$refs.email.style.backgroundColor;
+              this.$refs.email.style.backgroundColor = "red";
+              this.$refs.password.style.backgroundColor = "red";
+              setTimeout(() => {
+                this.$refs.email.style.backgroundColor = emailNormalColour;
+                this.$refs.password.style.backgroundColor = passwordNormalColour;
+              }, 500);
             }
           }.bind(this)
         );
@@ -209,6 +308,8 @@ export default {
           this.isLoggedIn = false;
           this.selectedScriptId = null;
           this.scripts = [];
+          this.token = null;
+          axios.defaults.headers.common = {};
         });
     },
     register() {
@@ -218,16 +319,40 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .then(console.log)
-        .catch(console.log);
+        .catch(
+          function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              let emailNormalColour = this.$refs.email.style.backgroundColor;
+              this.$refs.email.style.backgroundColor = "red";
+              setTimeout(() => {
+                this.$refs.email.style.backgroundColor = emailNormalColour;
+              }, 500);
+            }
+          }.bind(this)
+        );
     },
     reset() {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "accounts/reset-password/", {
           email: this.email,
         })
-        .then(console.log)
-        .catch(console.log);
+        .catch(
+          function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              let emailNormalColour = this.$refs.email.style.backgroundColor;
+              this.$refs.email.style.backgroundColor = "red";
+              setTimeout(() => {
+                this.$refs.email.style.backgroundColor = emailNormalColour;
+              }, 500);
+            }
+          }.bind(this)
+        );
     },
   },
 };
@@ -281,13 +406,13 @@ function uploadLine(line) {
 </script>
 <style scoped>
 .bar {
-  display:grid;
+  display: grid;
   margin-bottom: 4em;
 }
 .signup {
   display: grid;
-  grid-column:1;
-  grid-row:1;
+  grid-column: 1;
+  grid-row: 1;
 }
 .signup-btn-group {
   grid-row: 2;
@@ -319,8 +444,8 @@ function uploadLine(line) {
 }
 .create {
   display: grid;
-  grid-column:2;
-  grid-row:1;
+  grid-column: 2;
+  grid-row: 1;
   column-gap: 0rem;
 }
 .create-btn-group {
@@ -352,8 +477,8 @@ function uploadLine(line) {
 }
 .update {
   display: grid;
-  grid-column:3;
-  grid-row:1;
+  grid-column: 3;
+  grid-row: 1;
 }
 .update-btn-group {
   grid-column: 2;
