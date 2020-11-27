@@ -154,7 +154,7 @@ export default {
     playNonstop: function () {
       this.$emit("play-nonstop", this.list);
     },
-    playCharacters: function () {
+    blinkCharacterSelect: function () {
       if (this.selectedCharacters.length == 0) {
         let normal = this.$refs.selection.style.backgroundColor;
         this.$refs.selection.style.backgroundColor = "red";
@@ -162,6 +162,9 @@ export default {
           this.$refs.selection.style.backgroundColor = normal;
         }, 500);
       }
+    },
+    playCharacters: function () {
+      this.blinkCharacterSelect();
       this.$emit("play-on-cue", this.list, this.selectedCharacters);
     },
     deletion(id) {
@@ -177,13 +180,7 @@ export default {
       this.isEditing = false;
     },
     muteSelected() {
-      if (this.selectedCharacters.length == 0) {
-        let normal = this.$refs.selection.style.backgroundColor;
-        this.$refs.selection.style.backgroundColor = "red";
-        setTimeout(() => {
-          this.$refs.selection.style.backgroundColor = normal;
-        }, 500);
-      }
+      this.blinkCharacterSelect();
       this.list.forEach((line) => {
         if (this.selectedCharacters.includes(line.name)) {
           line.shouldPlay = false;
@@ -191,13 +188,7 @@ export default {
       });
     },
     unmuteSelected() {
-      if (this.selectedCharacters.length == 0) {
-        let normal = this.$refs.selection.style.backgroundColor;
-        this.$refs.selection.style.backgroundColor = "red";
-        setTimeout(() => {
-          this.$refs.selection.style.backgroundColor = normal;
-        }, 500);
-      }
+      this.blinkCharacterSelect();
       this.list.forEach((line) => {
         if (this.selectedCharacters.includes(line.name)) {
           line.shouldPlay = true;
