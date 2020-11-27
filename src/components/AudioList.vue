@@ -5,7 +5,9 @@
       :list="list"
       :alreadyLoggedIn="stayingLoggedIn"
       :alreadyLoggedInDetails="stayingLoggedInDetails"
+      :alreadySavedScriptId="savingScriptId"
       @logged-in="onLogIn"
+      @script-selected="loadScript"
     />
     <div class="container">
       <audio-recorder @recording-done="recordingDone" />
@@ -114,6 +116,10 @@ export default {
       type: Object,
       required: true,
     },
+    savingScriptId: {
+      type: Number,
+      required: true,
+    },
   },
   computed: {
     uniqCharacters() {
@@ -122,7 +128,11 @@ export default {
   },
   methods: {
     loadScript: function (script) {
-      this.list = script;
+      this.list = script["lines"];
+      this.list.forEach(function (item) {
+        item["listItemId"] = uuidv4();
+      });
+      this.$emit("selected-script-id", script["id"]);
     },
     onLogIn: function (loginDetails) {
       this.$emit("stay-logged-in", loginDetails);

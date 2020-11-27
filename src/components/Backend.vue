@@ -88,6 +88,10 @@ export default {
       type: Object,
       required: true,
     },
+    alreadySavedScriptId: {
+      type: Number,
+      required: true,
+    }
   },
   mounted() {
     this.isLoggedIn = this.alreadyLoggedIn;
@@ -99,6 +103,7 @@ export default {
         Authorization: "Token " + this.token,
       };
       this.loadScripts();
+      this.selectedScriptId = this.alreadySavedScriptId;
     }
   },
   methods: {
@@ -157,7 +162,7 @@ export default {
       const selectedScript = this.scripts.filter(
         (script) => script["id"] === this.selectedScriptId
       );
-      this.$emit("script-selected", selectedScript[0]["lines"]);
+      this.$emit("script-selected", {lines: selectedScript[0]["lines"], id: selectedScript[0]["id"]});
     },
     saveAsNew() {
       var lines = prepareLinesForSave(this.list);
@@ -208,7 +213,7 @@ export default {
         .post(process.env.VUE_APP_BACKEND_URL + "accounts/logout/")
         .then(() => {
           this.isLoggedIn = false;
-          this.selectedLines = [];
+          this.selectedScriptId = null;
           this.scripts = [];
         });
     },

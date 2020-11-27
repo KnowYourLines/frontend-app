@@ -2,7 +2,7 @@
 
 #### Backend integration
 - [ ] Error messaging
-- [ ] Keep played script selected
+- [ ] Mobile?
 
 #### Best practices
 - [ ] e2e tests

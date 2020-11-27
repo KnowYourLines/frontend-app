@@ -8,9 +8,11 @@
       :isPlaying="isPlaying"
       :stayingLoggedIn="stayLoggedIn"
       :stayingLoggedInDetails="loginDetails"
+      :savingScriptId="savedScriptId"
       @play-nonstop="playAll"
       @play-on-cue="playOnCue"
       @stay-logged-in="loggedIn"
+      @selected-script-id="saveScriptId"
     />
   </div>
 </template>
@@ -30,9 +32,13 @@ export default {
       cuePrompt: "",
       stayLoggedIn: false,
       loginDetails: {},
+      savedScriptId: null,
     };
   },
   methods: {
+    saveScriptId: function (id){
+      this.savedScriptId = id;
+    },
     loggedIn: function (details){
       this.stayLoggedIn = true;
       this.loginDetails = details
