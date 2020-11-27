@@ -182,7 +182,7 @@ export default {
         );
     },
     blinkScriptUpdate(error) {
-      if (error.response.status == 403) {
+      if (error.response.status == 403 || error.response.status == 401) {
         this.blinkLogin(error);
       } else {
         let scriptSelectNormalColour = this.$refs.scriptSelect.style
@@ -228,7 +228,7 @@ export default {
       }
     },
     blinkSaveNew(error) {
-      if (error.response.status == 403) {
+      if (error.response.status == 403 || error.response.status == 401) {
         this.blinkLogIn(error);
       } else {
         let scriptNameNormalColour = this.$refs.scriptName.style
