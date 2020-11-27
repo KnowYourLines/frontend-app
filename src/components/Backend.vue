@@ -183,7 +183,7 @@ export default {
     },
     blinkScriptUpdate(error) {
       if (error.response.status == 403 || error.response.status == 401) {
-        this.blinkLogin(error);
+        this.blinkLogIn(error);
       } else {
         let scriptSelectNormalColour = this.$refs.scriptSelect.style
           .backgroundColor;
