@@ -1,9 +1,5 @@
 ### Todo
-
-#### Backend integration
-- [ ] mobile?
-
-#### Best practices
+#### Go to Prod
 - [ ] e2e tests
 - [ ] unit tests
 - [ ] CI/CD
