@@ -32,7 +32,7 @@ export default {
       cuePrompt: "",
       stayLoggedIn: false,
       loginDetails: {},
-      savedScriptId: null,
+      savedScriptId: -1,
     };
   },
   methods: {
