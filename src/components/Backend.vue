@@ -266,12 +266,16 @@ export default {
     },
     blinkLogIn(error) {
       if (
-        Object.keys(error.response.data).includes("email") &&
+        (Object.keys(error.response.data).includes("email") ||
+          Object.keys(error.response.data).includes("username")) &&
         !Object.keys(error.response.data).includes("password")
       ) {
         this.blinkEmail();
       } else if (
-        !Object.keys(error.response.data).includes("email") &&
+        !(
+          Object.keys(error.response.data).includes("email") ||
+          Object.keys(error.response.data).includes("username")
+        ) &&
         Object.keys(error.response.data).includes("password")
       ) {
         this.blinkPassword();
