@@ -20,7 +20,6 @@
       <div class="create">
         <div class="create-input">
           <input type="text" autocomplete="on" v-model.lazy.trim="scriptName" />
-          <input type="text" autocomplete="on" v-model.lazy.trim="writer" />
         </div>
         <div class="create-btn-group">
           <button @click="saveAsNew" type="button">Save as new</button>
@@ -44,7 +43,7 @@
               :value="script.id"
               :key="script.id"
             >
-              {{ script.scriptName }} by {{ script.writer }}
+              {{ script.scriptName }}
             </option>
           </select>
         </div>
@@ -68,7 +67,6 @@ export default {
       email: "email@address.com",
       password: "password",
       scriptName: "Script Title",
-      writer: "Writer",
       token: null,
       scripts: [],
       selectedScriptId: null,
@@ -115,7 +113,6 @@ export default {
             function (script) {
               this.scripts.push({
                 scriptName: script["scriptName"],
-                writer: script["writer"],
                 lines: script["lines"],
                 id: script["id"],
               });
@@ -147,8 +144,6 @@ export default {
             this.selectedScriptId +
             "/",
           {
-            scriptName: this.scriptName,
-            writer: this.writer,
             lines: lines,
           }
         )
@@ -169,7 +164,6 @@ export default {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
           scriptName: this.scriptName,
-          writer: this.writer,
           lines: lines,
         })
         .then(() => {
@@ -288,7 +282,7 @@ function uploadLine(line) {
 <style scoped>
 .bar {
   display:grid;
-  margin-bottom: 1em;
+  margin-bottom: 4em;
 }
 .signup {
   display: grid;
@@ -327,10 +321,11 @@ function uploadLine(line) {
   display: grid;
   grid-column:2;
   grid-row:1;
+  column-gap: 0rem;
 }
 .create-btn-group {
-  grid-column: 2;
-  grid-row: 1;
+  grid-column: 1;
+  grid-row: 2;
 }
 .create-btn-group button {
   font-size: 15px;
@@ -352,8 +347,6 @@ function uploadLine(line) {
   -webkit-border-radius: 5px;
   border-radius: 5px;
   border-color: #ccc;
-  grid-column: 1;
-  grid-row: 1;
   background-color: #00968e;
   color: white;
 }
