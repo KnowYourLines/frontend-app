@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isPlaying">
-    <meta name="viewport" content="width=1200" />
+    <meta name="viewport" content="width=1350" />
     <backend
       :list="list"
       :alreadyLoggedIn="stayingLoggedIn"

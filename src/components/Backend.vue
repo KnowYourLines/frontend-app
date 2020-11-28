@@ -3,18 +3,29 @@
     <div class="bar">
       <div class="signup">
         <div class="signup-input">
+          <div class="email-input">
           <input
             type="text"
             autocomplete="on"
             v-model.lazy.trim="email"
             ref="email"
           />
-          <input
-            type="text"
-            autocomplete="on"
-            v-model.lazy.trim="password"
-            ref="password"
-          />
+          </div>
+          <div class="password-input">
+            <input
+              type="password"
+              autocomplete="on"
+              v-model.lazy.trim="password"
+              ref="password"
+            />
+            <img
+              v-if="hidePassword"
+              @click="togglePassword"
+              src="@/assets/eye.png"
+              width="25"
+            />
+            <img v-else @click="togglePassword" src="@/assets/eye-hide.png" width="25"/>
+          </div>
         </div>
         <div class="signup-btn-group">
           <button v-if="!isLoggedIn" @click="logIn" type="button">Login</button>
@@ -82,6 +93,7 @@ export default {
       token: null,
       scripts: [],
       selectedScriptId: null,
+      hidePassword: true,
     };
   },
   props: {
@@ -116,6 +128,14 @@ export default {
     }
   },
   methods: {
+    togglePassword() {
+      this.hidePassword = !this.hidePassword;
+      if (this.hidePassword) {
+        this.$refs.password.type = "password";
+      } else {
+        this.$refs.password.type = "text";
+      }
+    },
     catchError(error) {
       if (error.response) {
         console.log(error.response.data);
@@ -384,6 +404,29 @@ function uploadLine(line) {
 }
 </script>
 <style scoped>
+.email-input {
+    flex: 1;
+}  
+.password-input {
+    flex:2;
+    margin-right: 100px
+} 
+.password-input {
+  position: relative;
+  width: 140px;
+}
+.password-input input {
+  border: none;
+  background-color: #fff;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.password-input img {
+  position: absolute;
+  top: -1px;
+  right: 5px;
+}
 .bar {
   display: grid;
   margin-bottom: 4em;
@@ -410,7 +453,21 @@ function uploadLine(line) {
   background: #00968e;
   color: #fff;
 }
+.signup-input {
+    display: flex;
+}
 .signup-input input[type="text"] {
+  font-size: 15px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border-color: #ccc;
+  grid-column: 1;
+  grid-row: 1;
+  background-color: #00968e;
+  color: white;
+}
+.signup-input input[type="password"] {
   font-size: 15px;
   border: 2px solid #ccc;
   -webkit-border-radius: 5px;
