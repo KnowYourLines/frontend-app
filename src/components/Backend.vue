@@ -4,12 +4,12 @@
       <div class="signup">
         <div class="signup-input">
           <div class="email-input">
-          <input
-            type="text"
-            autocomplete="on"
-            v-model.lazy.trim="email"
-            ref="email"
-          />
+            <input
+              type="text"
+              autocomplete="on"
+              v-model.lazy.trim="email"
+              ref="email"
+            />
           </div>
           <div class="password-input">
             <input
@@ -24,7 +24,12 @@
               src="@/assets/eye.png"
               width="25"
             />
-            <img v-else @click="togglePassword" src="@/assets/eye-hide.png" width="25"/>
+            <img
+              v-else
+              @click="togglePassword"
+              src="@/assets/eye-hide.png"
+              width="25"
+            />
           </div>
         </div>
         <div class="signup-btn-group">
@@ -405,12 +410,12 @@ function uploadLine(line) {
 </script>
 <style scoped>
 .email-input {
-    flex: 1;
-}  
+  flex: 1;
+}
 .password-input {
-    flex:2;
-    margin-right: 100px
-} 
+  flex: 2;
+  margin-right: 100px;
+}
 .password-input {
   position: relative;
   width: 140px;
@@ -454,7 +459,7 @@ function uploadLine(line) {
   color: #fff;
 }
 .signup-input {
-    display: flex;
+  display: flex;
 }
 .signup-input input[type="text"] {
   font-size: 15px;
