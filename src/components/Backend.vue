@@ -1,5 +1,26 @@
 <template>
   <div>
+    <div><button
+      class="btn btn-primary btn-margin"
+      v-if="!authenticated"
+      @click="login()"
+    >
+      Log In
+    </button>
+    <button
+      class="btn btn-primary btn-margin"
+      v-if="authenticated"
+      @click="privateMessage()"
+    >
+      Call Private
+    </button>
+    <button
+      class="btn btn-primary btn-margin"
+      v-if="authenticated"
+      @click="logout()"
+    >
+      Log Out
+    </button></div>
     <div class="bar">
       <div class="signup">
         <div class="signup-input">
@@ -85,12 +106,23 @@
 </template>
 
 <script>
+import AuthService from "../auth/AuthService";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+const API_URL = process.env.VUE_APP_BACKEND_URL
+const auth = new AuthService();
 export default {
   name: "Backend",
   data() {
+        this.handleAuthentication();
+    this.authenticated = false;
+
+    auth.authNotifier.on("authChange", (authState) => {
+      this.authenticated = authState.authenticated;
+    });
     return {
+      authenticated: false,
+      message: "",
       isLoggedIn: false,
       email: "email@address.com",
       password: "password",
@@ -133,6 +165,22 @@ export default {
     }
   },
   methods: {
+    login() {
+      auth.login();
+    },
+    handleAuthentication() {
+      auth.handleAuthentication();
+    },
+    logout() {
+      auth.logout();
+    },
+    privateMessage () {
+      const url = `${API_URL}/scripts/`
+      return axios.get(url, {headers: {Authorization: `Bearer ${auth.getAuthToken()}`}}).then((response) => {
+        console.log(response.data)
+        this.message = response.data || ''
+      })
+    },
     togglePassword() {
       this.hidePassword = !this.hidePassword;
       if (this.hidePassword) {
