@@ -234,9 +234,14 @@ export default {
           scriptName: this.scriptName,
           lines: lines,
         })
-        .then(() => {
+        .then((response) => {
           this.scripts = [];
           this.loadScripts();
+          this.selectedScriptId = response.data["id"];
+          this.$emit("script-selected", {
+            lines: response.data["lines"],
+            id: response.data["id"],
+          });
         })
         .catch(
           function (error) {
