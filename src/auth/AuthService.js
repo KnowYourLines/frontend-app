@@ -1,6 +1,6 @@
 import auth0 from 'auth0-js'
 import EventEmitter from 'eventemitter3'
-import router from './../router'
+// import router from './../router'
 
 export default class AuthService {
   authenticated = this.isAuthenticated()
@@ -41,7 +41,7 @@ export default class AuthService {
         console.log(err)
         alert(`Error: ${err.error}. Check the console for further details.`)
       }
-      router.replace('/')
+    //   router.replace('/')
     })
   }
 
@@ -63,7 +63,7 @@ export default class AuthService {
     delete this.expiresAt
     this.authNotifier.emit('authChange', false)
     // navigate to the home route
-    router.replace('/')
+    // router.replace('/')
   }
 
   // checks if the user is authenticated
