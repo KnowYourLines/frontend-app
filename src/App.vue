@@ -34,9 +34,7 @@ export default {
         process.env.VUE_APP_AUTH0_DOMAIN,
         {
           auth: {
-            params: {
               redirect: false,
-            },
           },
         }
       ),
