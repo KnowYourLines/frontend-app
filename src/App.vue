@@ -15,11 +15,56 @@
 
 <script>
 import AudioPlayer from "./components/AudioPlayer";
+import Auth0Lock from "auth0-lock";
 
 export default {
   name: "App",
   components: {
     AudioPlayer,
+  },
+  data() {
+    var wm = new WeakMap();
+    var privateStore = {};
+    wm.set(privateStore, {
+      appName: "example",
+    });
+    return {
+      lock: new Auth0Lock(
+        process.env.VUE_APP_CLIENT_ID,
+        process.env.VUE_APP_AUTH0_DOMAIN,
+        {
+          auth: {
+            params: {
+              redirect: false,
+            },
+          },
+        }
+      ),
+      wm: wm,
+      privateStore: privateStore,
+    };
+  },
+  mounted() {
+    // Listening for the authenticated event
+    this.lock.show();
+    this.lock.on("authenticated", function (authResult) {
+      // Use the token in authResult to getUserInfo() and save it if necessary
+      this.getUserInfo(authResult.accessToken, function (error, profile) {
+        if (error) {
+          // Handle error
+          return;
+        }
+
+        //we recommend not storing Access Tokens unless absolutely necessary
+        this.wm.set(this.privateStore, {
+          accessToken: authResult.accessToken,
+        });
+
+        this.wm.set(this.privateStore, {
+          profile: profile,
+        });
+      });
+    });
   },
 };
 </script>
