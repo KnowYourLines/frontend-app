@@ -34,7 +34,8 @@ export default {
         process.env.VUE_APP_AUTH0_DOMAIN,
         {
           auth: {
-              redirect: false,
+            audience: process.env.VUE_APP_AUDIENCE,
+            redirect: false,
           },
         }
       ),
@@ -45,24 +46,30 @@ export default {
   mounted() {
     // Listening for the authenticated event
     this.lock.show();
-    this.lock.on("authenticated", function (authResult) {
-      // Use the token in authResult to getUserInfo() and save it if necessary
-      this.getUserInfo(authResult.accessToken, function (error, profile) {
-        if (error) {
-          // Handle error
-          return;
-        }
+    this.lock.on(
+      "authenticated",
+      function (authResult) {
+        // Use the token in authResult to getUserInfo() and save it if necessary
+        this.lock.getUserInfo(
+          authResult.accessToken,
+          function (error, profile) {
+            if (error) {
+              // Handle error
+              return;
+            }
 
-        //we recommend not storing Access Tokens unless absolutely necessary
-        this.wm.set(this.privateStore, {
-          accessToken: authResult.accessToken,
-        });
+            //we recommend not storing Access Tokens unless absolutely necessary
+            this.wm.set(this.privateStore, {
+              accessToken: authResult.accessToken,
+            });
 
-        this.wm.set(this.privateStore, {
-          profile: profile,
-        });
-      });
-    });
+            this.wm.set(this.privateStore, {
+              profile: profile,
+            });
+          }.bind(this)
+        );
+      }.bind(this)
+    );
   },
 };
 </script>
