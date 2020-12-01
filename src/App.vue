@@ -16,6 +16,7 @@
 <script>
 import AudioPlayer from "./components/AudioPlayer";
 import Auth0Lock from "auth0-lock";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -68,6 +69,14 @@ export default {
             });
           }.bind(this)
         );
+        const url = `${process.env.VUE_APP_BACKEND_URL}/scripts/`;
+        return axios
+          .get(url, {
+            headers: { Authorization: `Bearer ${authResult.accessToken}` },
+          })
+          .then((response) => {
+            console.log(response.data);
+          });
       }.bind(this)
     );
   },
