@@ -10,16 +10,35 @@
       </p>
     </div>
     <audio-player />
+    <div>
+    <new-message-form @send="addMessage" />
+    <message-list :messages="messages" />
   </div>
+  </div>
+
 </template>
 
 <script>
 import AudioPlayer from "./components/AudioPlayer";
+import NewMessageForm from "./components/NewMessageForm";
+import MessageList from './components/MessageList';
 
 export default {
   name: "App",
   components: {
     AudioPlayer,
+    NewMessageForm,
+    MessageList
   },
+  data() {
+    return {
+      messages: []
+    };
+  },
+  methods: {
+    addMessage(text) {
+      this.messages.unshift(text);
+    }
+  }
 };
 </script>

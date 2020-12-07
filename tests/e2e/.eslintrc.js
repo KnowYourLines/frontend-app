@@ -3,7 +3,7 @@ module.exports = {
     'cypress'
   ],
   env: {
-    mocha: true,
+    jest: true,
     'cypress/globals': true
   },
   rules: {

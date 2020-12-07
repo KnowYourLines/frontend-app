@@ -2,9 +2,6 @@
   "name": "frontend-app",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "12.x"
-  },
   "scripts": {
     "serve": "vue-cli-service serve --https",
     "build": "vue-cli-service build",
@@ -24,15 +21,15 @@
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-unit-mocha": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "^4.5.9",
     "@vue/cli-service": "~4.5.0",
     "@vue/test-utils": "^1.1.0",
     "babel-eslint": "^10.1.0",
-    "chai": "^4.1.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "mocha": "^8.2.0",
-    "mochapack": "^2.0.5",
     "vue-template-compiler": "^2.6.12"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
