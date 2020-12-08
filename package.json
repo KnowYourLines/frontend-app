@@ -2,6 +2,9 @@
   "name": "frontend-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "serve": "vue-cli-service serve --https",
     "build": "vue-cli-service build",
@@ -28,8 +31,5 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "^2.6.12"
-  },
-  "engines": {
-    "node": "12.x"
   }
 }
