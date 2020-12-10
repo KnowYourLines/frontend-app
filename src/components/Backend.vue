@@ -150,7 +150,7 @@ export default {
     },
     loadScripts() {
       axios
-        .get(process.env.VUE_APP_BACKEND_URL + "scripts/")
+        .get(process.env.VUE_APP_BACKEND_URL + "/scripts/")
         .then((response) => {
           response.data.forEach(
             function (script) {
@@ -170,7 +170,7 @@ export default {
       axios
         .delete(
           process.env.VUE_APP_BACKEND_URL +
-            "scripts/" +
+            "/scripts/" +
             this.selectedScriptId +
             "/"
         )
@@ -189,7 +189,7 @@ export default {
       axios
         .patch(
           process.env.VUE_APP_BACKEND_URL +
-            "scripts/" +
+            "/scripts/" +
             this.selectedScriptId +
             "/",
           {
@@ -230,7 +230,7 @@ export default {
     saveAsNew() {
       var lines = prepareLinesForSave(this.list);
       axios
-        .post(process.env.VUE_APP_BACKEND_URL + "scripts/", {
+        .post(process.env.VUE_APP_BACKEND_URL + "/scripts/", {
           scriptName: this.scriptName,
           lines: lines,
         })
@@ -271,7 +271,7 @@ export default {
     },
     logIn() {
       axios
-        .post(process.env.VUE_APP_BACKEND_URL + "accounts/login/", {
+        .post(process.env.VUE_APP_BACKEND_URL + "/accounts/login/", {
           username: this.email,
           password: this.password,
         })
@@ -316,7 +316,7 @@ export default {
     },
     logOut() {
       axios
-        .post(process.env.VUE_APP_BACKEND_URL + "accounts/logout/")
+        .post(process.env.VUE_APP_BACKEND_URL + "/accounts/logout/")
         .then(() => {
           this.isLoggedIn = false;
           this.selectedScriptId = null;
@@ -327,7 +327,7 @@ export default {
     },
     register() {
       axios
-        .post(process.env.VUE_APP_BACKEND_URL + "accounts/register/", {
+        .post(process.env.VUE_APP_BACKEND_URL + "/accounts/register/", {
           username: this.email,
           email: this.email,
           password: this.password,
@@ -354,7 +354,7 @@ export default {
     },
     reset() {
       axios
-        .post(process.env.VUE_APP_BACKEND_URL + "accounts/reset-password/", {
+        .post(process.env.VUE_APP_BACKEND_URL + "/accounts/reset-password/", {
           email: this.email,
         })
         .catch(
@@ -385,7 +385,7 @@ function addOrder(lines) {
 function uploadLine(line) {
   axios
     .get(
-      process.env.VUE_APP_BACKEND_URL + "get_upload_url/" + line["lineId"] + "/"
+      process.env.VUE_APP_BACKEND_URL + "/get_upload_url/" + line["lineId"] + "/"
     )
     .then((response) => {
       var postUrl = response["data"]["s3Request"]["url"];
@@ -418,7 +418,7 @@ function uploadLine(line) {
   flex: 1;
 }
 .password-input {
-  flex: 2;
+  flex: 20;
   margin-right: 100px;
 }
 .password-input {
