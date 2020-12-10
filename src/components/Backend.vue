@@ -418,7 +418,7 @@ function uploadLine(line) {
   flex: 1;
 }
 .password-input {
-  flex: 2;
+  flex: 20;
   margin-right: 100px;
 }
 .password-input {
