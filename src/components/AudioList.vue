@@ -87,10 +87,8 @@ export default {
     AudioEdit,
   },
   data() {
-    console.log('hello')
-    console.log(this.loadedList)
     return {
-      list: this.loadedList,
+      list: [],
       isEditing: false,
       selectedCharacters: [],
     };
@@ -98,10 +96,6 @@ export default {
   props: {
     isPlaying: {
       type: Boolean,
-      required: true,
-    },
-    loadedList: {
-      type: Array,
       required: true,
     },
   },

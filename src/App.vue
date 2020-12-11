@@ -20,7 +20,6 @@
       @play-nonstop="triggerNonstop"
       @play-on-cue="triggerOnCue"
       @list-update="updateList"
-      :loadedList="list"
       :isPlaying="isPlaying"
     />
   </div>
