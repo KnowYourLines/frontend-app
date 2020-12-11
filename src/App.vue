@@ -9,17 +9,59 @@
         >
       </p>
     </div>
-    <audio-player />
+    <backend @script-selected="selectScript" :list="list" />
+    <audio-player
+      @stop-playing="stopPlaying"
+      ref="player"
+      :isPlaying="isPlaying"
+    />
+    <audio-list
+      ref="list"
+      @play-nonstop="triggerNonstop"
+      @play-on-cue="triggerOnCue"
+      @list-update="updateList"
+      :loadedList="list"
+      :isPlaying="isPlaying"
+    />
   </div>
 </template>
 
 <script>
 import AudioPlayer from "./components/AudioPlayer";
+import Backend from "./components/Backend.vue";
+import AudioList from "./components/AudioList.vue";
 
 export default {
   name: "App",
   components: {
     AudioPlayer,
+    Backend,
+    AudioList,
+  },
+  data() {
+    return {
+      list: [],
+      isPlaying: false,
+    };
+  },
+  methods: {
+    selectScript: function (script) {
+      this.$refs.list.loadScript(script);
+    },
+    updateList: function (updatedScript) {
+      this.list = updatedScript;
+    },
+    triggerNonstop: function (script) {
+      this.isPlaying = true;
+      this.$refs.player.playAll(script);
+    },
+    triggerOnCue: function (script, characters) {
+      this.isPlaying = true;
+      this.$refs.player.playOnCue(script, characters);
+    },
+    stopPlaying: function () {
+      this.isPlaying = false;
+    },
   },
 };
 </script>
