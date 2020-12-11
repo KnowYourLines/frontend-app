@@ -4,45 +4,26 @@
       <button type="button" class="play" @click="stopAll">Stop</button>
       <h2>{{ characterPrompt }}<br />{{ cuePrompt }}<br />{{ speechHeard }}</h2>
     </div>
-    <audio-list
-      :isPlaying="isPlaying"
-      :stayingLoggedIn="stayLoggedIn"
-      :stayingLoggedInDetails="loginDetails"
-      :savingScriptId="savedScriptId"
-      @play-nonstop="playAll"
-      @play-on-cue="playOnCue"
-      @stay-logged-in="loggedIn"
-      @selected-script-id="saveScriptId"
-    />
   </div>
 </template>
 
 <script>
-import AudioList from "./AudioList";
 export default {
   name: "AudioPlayer",
-  components: {
-    AudioList,
-  },
   data() {
     return {
-      isPlaying: false,
       characterPrompt: "",
       speechHeard: "",
       cuePrompt: "",
-      stayLoggedIn: false,
-      loginDetails: {},
-      savedScriptId: -1,
     };
   },
+  props: {
+    isPlaying: {
+      type: Boolean,
+      required: true,
+    },
+  },
   methods: {
-    saveScriptId: function (id){
-      this.savedScriptId = id;
-    },
-    loggedIn: function (details){
-      this.stayLoggedIn = true;
-      this.loginDetails = details
-    },
     playAll: function (recordings) {
       var recordings_to_play = recordings.filter(
         (recording) => recording.shouldPlay
@@ -59,7 +40,6 @@ export default {
         this.player.src = line;
       }
       this.player.play();
-      this.isPlaying = true;
       this.player.addEventListener(
         "ended",
         function () {
@@ -88,7 +68,7 @@ export default {
       );
     },
     stopAll: function () {
-      this.isPlaying = false;
+      this.$emit("stop-playing");
       this.characterPrompt = "";
       this.speechHeard = "";
       this.cuePrompt = "";
@@ -121,7 +101,6 @@ export default {
           this.player.src = line;
         }
         this.player.play();
-        this.isPlaying = true;
         this.player.addEventListener(
           "ended",
           function () {
@@ -215,7 +194,6 @@ export default {
       if (recognition_indexes[0] == 0) {
         index = 0;
         var line_cue = recordings_to_play[index]["cue"];
-        this.isPlaying = true;
         this.characterPrompt =
           "Listening for: " + recordings_to_play[index]["name"];
         this.cuePrompt = "Cue: " + line_cue;

@@ -9,36 +9,74 @@
         >
       </p>
     </div>
-    <audio-player />
     <div>
-    <new-message-form @send="addMessage" />
-    <message-list :messages="messages" />
+      <new-message-form @send="addMessage" />
+      <message-list :messages="messages" />
+    </div>
+    <backend
+      @script-selected="selectScript"
+      :list="list"
+      :isPlaying="isPlaying"
+    />
+    <audio-player
+      @stop-playing="stopPlaying"
+      ref="player"
+      :isPlaying="isPlaying"
+    />
+    <audio-list
+      ref="list"
+      @play-nonstop="triggerNonstop"
+      @play-on-cue="triggerOnCue"
+      @list-update="updateList"
+      :isPlaying="isPlaying"
+    />
   </div>
-  </div>
-
 </template>
 
 <script>
 import AudioPlayer from "./components/AudioPlayer";
 import NewMessageForm from "./components/NewMessageForm";
-import MessageList from './components/MessageList';
+import MessageList from "./components/MessageList";
+import Backend from "./components/Backend.vue";
+import AudioList from "./components/AudioList.vue";
 
 export default {
   name: "App",
   components: {
     AudioPlayer,
     NewMessageForm,
-    MessageList
+    MessageList,
+    Backend,
+    AudioList,
   },
   data() {
     return {
-      messages: []
+      list: [],
+      isPlaying: false,
+      messages: [],
     };
   },
   methods: {
+    selectScript: function (script) {
+      this.$refs.list.loadScript(script);
+    },
+    updateList: function (updatedScript) {
+      this.list = updatedScript;
+    },
+    triggerNonstop: function (script) {
+      this.isPlaying = true;
+      this.$refs.player.playAll(script);
+    },
+    triggerOnCue: function (script, characters) {
+      this.isPlaying = true;
+      this.$refs.player.playOnCue(script, characters);
+    },
+    stopPlaying: function () {
+      this.isPlaying = false;
+    },
     addMessage(text) {
       this.messages.unshift(text);
-    }
-  }
+    },
+  },
 };
 </script>

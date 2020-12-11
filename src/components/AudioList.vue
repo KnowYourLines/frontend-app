@@ -1,14 +1,6 @@
 <template>
   <div v-if="!isPlaying">
     <meta name="viewport" content="width=1350" />
-    <backend
-      :list="list"
-      :alreadyLoggedIn="stayingLoggedIn"
-      :alreadyLoggedInDetails="stayingLoggedInDetails"
-      :alreadySavedScriptId="savingScriptId"
-      @logged-in="onLogIn"
-      @script-selected="loadScript"
-    />
     <div class="container">
       <audio-recorder @recording-done="recordingDone" />
       <div class="selection" ref="selection">
@@ -85,7 +77,6 @@
 import draggable from "vuedraggable";
 import AudioRecorder from "./AudioRecorder";
 import AudioEdit from "./AudioEdit";
-import Backend from "./Backend";
 import { v4 as uuidv4 } from "uuid";
 import uniqBy from "lodash.uniqby";
 export default {
@@ -94,7 +85,6 @@ export default {
     draggable,
     AudioRecorder,
     AudioEdit,
-    Backend,
   },
   data() {
     return {
@@ -106,18 +96,6 @@ export default {
   props: {
     isPlaying: {
       type: Boolean,
-      required: true,
-    },
-    stayingLoggedIn: {
-      type: Boolean,
-      required: true,
-    },
-    stayingLoggedInDetails: {
-      type: Object,
-      required: true,
-    },
-    savingScriptId: {
-      type: Number,
       required: true,
     },
   },
@@ -132,13 +110,10 @@ export default {
       this.list.forEach(function (item) {
         item["listItemId"] = uuidv4();
       });
-      this.$emit("selected-script-id", script["id"]);
-    },
-    onLogIn: function (loginDetails) {
-      this.$emit("stay-logged-in", loginDetails);
     },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
+      this.$emit("list-update", this.list);
     },
     recordingDone: function (line) {
       var newLine = {
@@ -150,26 +125,31 @@ export default {
         uploaded: false,
       };
       this.list.push(newLine);
+      this.$emit("list-update", this.list);
     },
     playNonstop: function () {
-      this.$emit("play-nonstop", this.list);
-    },
-    blinkCharacterSelect: function () {
-      if (this.selectedCharacters.length == 0) {
-        let normal = this.$refs.selection.style.backgroundColor;
-        this.$refs.selection.style.backgroundColor = "red";
-        setTimeout(() => {
-          this.$refs.selection.style.backgroundColor = normal;
-        }, 500);
+      if (this.list.length !== 0) {
+        this.$emit("play-nonstop", this.list);
       }
     },
+    blinkCharacterSelect: function () {
+      let normal = this.$refs.selection.style.backgroundColor;
+      this.$refs.selection.style.backgroundColor = "red";
+      setTimeout(() => {
+        this.$refs.selection.style.backgroundColor = normal;
+      }, 500);
+    },
     playCharacters: function () {
-      this.blinkCharacterSelect();
-      this.$emit("play-on-cue", this.list, this.selectedCharacters);
+      if (this.selectedCharacters.length == 0) {
+        this.blinkCharacterSelect();
+      } else {
+        this.$emit("play-on-cue", this.list, this.selectedCharacters);
+      }
     },
     deletion(id) {
       const lineIndex = this.list.findIndex((line) => line.listItemId === id);
       this.list.splice(lineIndex, 1);
+      this.$emit("list-update", this.list);
     },
     toggleToItemEditForm() {
       if (this.list.length > 0) {
@@ -178,22 +158,31 @@ export default {
     },
     editDone() {
       this.isEditing = false;
+      this.$emit("list-update", this.list);
     },
     muteSelected() {
-      this.blinkCharacterSelect();
-      this.list.forEach((line) => {
-        if (this.selectedCharacters.includes(line.name)) {
-          line.shouldPlay = false;
-        }
-      });
+      if (this.selectedCharacters.length == 0) {
+        this.blinkCharacterSelect();
+      } else {
+        this.list.forEach((line) => {
+          if (this.selectedCharacters.includes(line.name)) {
+            line.shouldPlay = false;
+          }
+        });
+        this.$emit("list-update", this.list);
+      }
     },
     unmuteSelected() {
-      this.blinkCharacterSelect();
-      this.list.forEach((line) => {
-        if (this.selectedCharacters.includes(line.name)) {
-          line.shouldPlay = true;
-        }
-      });
+      if (this.selectedCharacters.length == 0) {
+        this.blinkCharacterSelect();
+      } else {
+        this.list.forEach((line) => {
+          if (this.selectedCharacters.includes(line.name)) {
+            line.shouldPlay = true;
+          }
+        });
+        this.$emit("list-update", this.list);
+      }
     },
   },
 };

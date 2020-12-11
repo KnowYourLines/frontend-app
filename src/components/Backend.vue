@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!isPlaying">
     <div class="bar">
       <div class="signup">
         <div class="signup-input">
@@ -106,31 +106,10 @@ export default {
       type: Array,
       required: true,
     },
-    alreadyLoggedIn: {
+    isPlaying: {
       type: Boolean,
       required: true,
     },
-    alreadyLoggedInDetails: {
-      type: Object,
-      required: true,
-    },
-    alreadySavedScriptId: {
-      type: Number,
-      required: true,
-    },
-  },
-  mounted() {
-    this.isLoggedIn = this.alreadyLoggedIn;
-    if (this.isLoggedIn) {
-      this.email = this.alreadyLoggedInDetails["email"];
-      this.password = this.alreadyLoggedInDetails["password"];
-      this.token = this.alreadyLoggedInDetails["token"];
-      axios.defaults.headers.common = {
-        Authorization: "Token " + this.token,
-      };
-      this.loadScripts();
-      this.selectedScriptId = this.alreadySavedScriptId;
-    }
   },
   methods: {
     togglePassword() {
@@ -224,7 +203,6 @@ export default {
       );
       this.$emit("script-selected", {
         lines: selectedScript[0]["lines"],
-        id: selectedScript[0]["id"],
       });
     },
     saveAsNew() {
@@ -240,7 +218,6 @@ export default {
           this.selectedScriptId = response.data["id"];
           this.$emit("script-selected", {
             lines: response.data["lines"],
-            id: response.data["id"],
           });
         })
         .catch(
@@ -281,11 +258,6 @@ export default {
             Authorization: "Token " + this.token,
           };
           this.isLoggedIn = true;
-          this.$emit("logged-in", {
-            token: this.token,
-            email: this.email,
-            password: this.password,
-          });
           this.loadScripts();
         })
         .catch(
@@ -385,7 +357,10 @@ function addOrder(lines) {
 function uploadLine(line) {
   axios
     .get(
-      process.env.VUE_APP_BACKEND_URL + "/get_upload_url/" + line["lineId"] + "/"
+      process.env.VUE_APP_BACKEND_URL +
+        "/get_upload_url/" +
+        line["lineId"] +
+        "/"
     )
     .then((response) => {
       var postUrl = response["data"]["s3Request"]["url"];
