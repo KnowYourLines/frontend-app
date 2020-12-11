@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!isPlaying">
     <div class="bar">
       <div class="signup">
         <div class="signup-input">
@@ -104,6 +104,10 @@ export default {
   props: {
     list: {
       type: Array,
+      required: true,
+    },
+    isPlaying: {
+      type: Boolean,
       required: true,
     },
   },

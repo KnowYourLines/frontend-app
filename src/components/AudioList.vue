@@ -133,17 +133,18 @@ export default {
       }
     },
     blinkCharacterSelect: function () {
-      if (this.selectedCharacters.length == 0) {
-        let normal = this.$refs.selection.style.backgroundColor;
-        this.$refs.selection.style.backgroundColor = "red";
-        setTimeout(() => {
-          this.$refs.selection.style.backgroundColor = normal;
-        }, 500);
-      }
+      let normal = this.$refs.selection.style.backgroundColor;
+      this.$refs.selection.style.backgroundColor = "red";
+      setTimeout(() => {
+        this.$refs.selection.style.backgroundColor = normal;
+      }, 500);
     },
     playCharacters: function () {
-      this.blinkCharacterSelect();
-      this.$emit("play-on-cue", this.list, this.selectedCharacters);
+      if (this.selectedCharacters.length == 0) {
+        this.blinkCharacterSelect();
+      } else {
+        this.$emit("play-on-cue", this.list, this.selectedCharacters);
+      }
     },
     deletion(id) {
       const lineIndex = this.list.findIndex((line) => line.listItemId === id);
@@ -160,22 +161,28 @@ export default {
       this.$emit("list-update", this.list);
     },
     muteSelected() {
-      this.blinkCharacterSelect();
-      this.list.forEach((line) => {
-        if (this.selectedCharacters.includes(line.name)) {
-          line.shouldPlay = false;
-        }
-      });
-      this.$emit("list-update", this.list);
+      if (this.selectedCharacters.length == 0) {
+        this.blinkCharacterSelect();
+      } else {
+        this.list.forEach((line) => {
+          if (this.selectedCharacters.includes(line.name)) {
+            line.shouldPlay = false;
+          }
+        });
+        this.$emit("list-update", this.list);
+      }
     },
     unmuteSelected() {
-      this.blinkCharacterSelect();
-      this.list.forEach((line) => {
-        if (this.selectedCharacters.includes(line.name)) {
-          line.shouldPlay = true;
-        }
-      });
-      this.$emit("list-update", this.list);
+      if (this.selectedCharacters.length == 0) {
+        this.blinkCharacterSelect();
+      } else {
+        this.list.forEach((line) => {
+          if (this.selectedCharacters.includes(line.name)) {
+            line.shouldPlay = true;
+          }
+        });
+        this.$emit("list-update", this.list);
+      }
     },
   },
 };

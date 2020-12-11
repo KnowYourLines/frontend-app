@@ -9,7 +9,7 @@
         >
       </p>
     </div>
-    <backend @script-selected="selectScript" :list="list" />
+    <backend @script-selected="selectScript" :list="list" :isPlaying="isPlaying"/>
     <audio-player
       @stop-playing="stopPlaying"
       ref="player"
