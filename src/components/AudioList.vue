@@ -113,6 +113,7 @@ export default {
     },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
+      this.$emit("list-update", this.list);
     },
     recordingDone: function (line) {
       var newLine = {
@@ -154,6 +155,7 @@ export default {
     },
     editDone() {
       this.isEditing = false;
+      this.$emit("list-update", this.list);
     },
     muteSelected() {
       this.blinkCharacterSelect();
