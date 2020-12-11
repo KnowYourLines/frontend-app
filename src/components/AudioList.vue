@@ -128,7 +128,9 @@ export default {
       this.$emit("list-update", this.list);
     },
     playNonstop: function () {
-      this.$emit("play-nonstop", this.list);
+      if (this.list.length !== 0) {
+        this.$emit("play-nonstop", this.list);
+      }
     },
     blinkCharacterSelect: function () {
       if (this.selectedCharacters.length == 0) {
