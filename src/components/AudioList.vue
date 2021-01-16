@@ -110,6 +110,7 @@ export default {
       this.list.forEach(function (item) {
         item["listItemId"] = uuidv4();
       });
+      this.$emit("list-update", this.list);
     },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
