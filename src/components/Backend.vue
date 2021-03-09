@@ -339,13 +339,25 @@ export default {
 };
 function prepareLinesForSave(lines) {
   const result = addOrder(lines);
+  const requests = [];
   result.forEach((line) => {
     if (!line["uploaded"]) {
       line["lineId"] = uuidv4();
-      uploadLine(line);
-      line["uploaded"] = true;
+      requests.push(uploadLine(line));
     }
   });
+  Promise
+    .all(requests)
+    .then(
+      result.forEach((line) => {
+        if (!line["uploaded"]) {
+          line["uploaded"] = true;
+        }
+      })
+    )
+    .catch(function (error) {
+          this.catchError(error);
+        });
   return result;
 }
 function addOrder(lines) {
@@ -355,7 +367,7 @@ function addOrder(lines) {
   return lines;
 }
 function uploadLine(line) {
-  axios
+  const request = axios
     .get(
       process.env.VUE_APP_BACKEND_URL +
         "/get_upload_url/" +
@@ -386,6 +398,7 @@ function uploadLine(line) {
         console.log(error.response.headers);
       }
     });
+  return request;
 }
 </script>
 <style scoped>
