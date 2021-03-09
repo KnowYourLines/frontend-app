@@ -337,7 +337,7 @@ export default {
     },
   },
 };
-function prepareLinesForSave(lines) {
+function prepareLinesForSave(lines, retries = 3) {
   const result = addOrder(lines);
   const requests = [];
   result.forEach((line) => {
@@ -346,8 +346,7 @@ function prepareLinesForSave(lines) {
       requests.push(uploadLine(line));
     }
   });
-  Promise
-    .all(requests)
+  Promise.all(requests)
     .then(
       result.forEach((line) => {
         if (!line["uploaded"]) {
@@ -356,8 +355,13 @@ function prepareLinesForSave(lines) {
       })
     )
     .catch(function (error) {
-          this.catchError(error);
-        });
+      if (retries > 0) {
+        console.log("Attempt " + (4 - retries + 1) + " to upload all lines");
+        return prepareLinesForSave(lines, retries - 1);
+      } else {
+        this.catchError(error);
+      }
+    });
   return result;
 }
 function addOrder(lines) {
@@ -366,7 +370,7 @@ function addOrder(lines) {
   }
   return lines;
 }
-function uploadLine(line) {
+function uploadLine(line, retries = 3) {
   const request = axios
     .get(
       process.env.VUE_APP_BACKEND_URL +
@@ -384,7 +388,16 @@ function uploadLine(line) {
       axios
         .post(postUrl, postData, { headers: { Authorization: "" } })
         .catch(function (error) {
-          if (error.response) {
+          if (retries > 0) {
+            console.log(
+              "Attempt " +
+                (4 - retries + 1) +
+                " to upload line " +
+                line["lineId"] +
+                " to S3"
+            );
+            return uploadLine(line, retries - 1);
+          } else if (error.response) {
             console.log(error.response.data);
             console.log(error.response.status);
             console.log(error.response.headers);
@@ -392,7 +405,15 @@ function uploadLine(line) {
         });
     })
     .catch(function (error) {
-      if (error.response) {
+      if (retries > 0) {
+        console.log(
+          "Attempt " +
+            (4 - retries + 1) +
+            " get upload URL for line " +
+            line["lineId"]
+        );
+        return uploadLine(line, retries - 1);
+      } else if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
