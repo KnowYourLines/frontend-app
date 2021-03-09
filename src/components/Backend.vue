@@ -99,6 +99,8 @@ export default {
       scripts: [],
       selectedScriptId: null,
       hidePassword: true,
+      maxRetries: 3,
+      maxAttempts: this.maxRetries + 1
     };
   },
   props: {
@@ -127,7 +129,7 @@ export default {
         console.log(error.response.headers);
       }
     },
-    loadScripts() {
+    loadScripts(retries = this.maxRetries) {
       axios
         .get(process.env.VUE_APP_BACKEND_URL + "/scripts/")
         .then((response) => {
@@ -142,10 +144,16 @@ export default {
           );
         })
         .catch(function (error) {
-          this.catchError(error);
+          if (retries > 0) {
+            var attemptNumber = this.maxAttempts - retries + 1
+            console.log("Attempt " + attemptNumber + " to load scripts");
+            return this.loadScripts(retries - 1);
+          } else {
+            this.catchError(error);
+          }
         });
     },
-    deleteScript() {
+    deleteScript(retries = this.maxRetries) {
       axios
         .delete(
           process.env.VUE_APP_BACKEND_URL +
@@ -159,11 +167,17 @@ export default {
         })
         .catch(
           function (error) {
-            this.catchErrorAndBlink(error, this.blinkScriptUpdate);
+            if (retries > 0) {
+              var attemptNumber = this.maxAttempts - retries + 1
+              console.log("Attempt " + attemptNumber + " to delete script");
+              return this.deleteScript(retries - 1);
+            } else {
+              this.catchErrorAndBlink(error, this.blinkScriptUpdate);
+            }
           }.bind(this)
         );
     },
-    saveChanges() {
+    saveChanges(retries = this.maxRetries) {
       var lines = prepareLinesForSave(this.list);
       axios
         .patch(
@@ -181,7 +195,13 @@ export default {
         })
         .catch(
           function (error) {
-            this.catchErrorAndBlink(error, this.blinkScriptUpdate);
+            if (retries > 0) {
+              var attemptNumber = this.maxAttempts - retries + 1
+              console.log("Attempt " + attemptNumber + " to save changes");
+              return this.saveChanges(retries - 1);
+            } else {
+              this.catchErrorAndBlink(error, this.blinkScriptUpdate);
+            }
           }.bind(this)
         );
     },
@@ -205,7 +225,7 @@ export default {
         lines: selectedScript[0]["lines"],
       });
     },
-    saveAsNew() {
+    saveAsNew(retries = this.maxRetries) {
       var lines = prepareLinesForSave(this.list);
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "/scripts/", {
@@ -222,7 +242,15 @@ export default {
         })
         .catch(
           function (error) {
-            this.catchErrorAndBlink(error, this.blinkSaveNew);
+            if (retries > 0) {
+              var attemptNumber = this.maxAttempts - retries + 1
+              console.log(
+                "Attempt " + attemptNumber + " to save new script"
+              );
+              return this.saveAsNew(retries - 1);
+            } else {
+              this.catchErrorAndBlink(error, this.blinkSaveNew);
+            }
           }.bind(this)
         );
     },
@@ -246,7 +274,7 @@ export default {
         }, 500);
       }
     },
-    logIn() {
+    logIn(retries = this.maxRetries) {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "/accounts/login/", {
           username: this.email,
@@ -262,7 +290,13 @@ export default {
         })
         .catch(
           function (error) {
-            this.catchErrorAndBlink(error, this.blinkLogIn);
+            if (retries > 0) {
+              var attemptNumber = this.maxAttempts - retries + 1
+              console.log("Attempt " + attemptNumber + " to log in");
+              return this.logIn(retries - 1);
+            } else {
+              this.catchErrorAndBlink(error, this.blinkLogIn);
+            }
           }.bind(this)
         );
     },
@@ -297,7 +331,7 @@ export default {
           axios.defaults.headers.common = {};
         });
     },
-    register() {
+    register(retries = this.maxRetries) {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "/accounts/register/", {
           username: this.email,
@@ -306,7 +340,13 @@ export default {
         })
         .catch(
           function (error) {
-            this.catchErrorAndBlink(error, this.blinkLogIn);
+            if (retries > 0) {
+              var attemptNumber = this.maxAttempts - retries + 1
+              console.log("Attempt " + attemptNumber + " to register");
+              return this.register(retries - 1);
+            } else {
+              this.catchErrorAndBlink(error, this.blinkLogIn);
+            }
           }.bind(this)
         );
     },
@@ -324,20 +364,28 @@ export default {
         this.$refs.password.style.backgroundColor = passwordNormalColour;
       }, 500);
     },
-    reset() {
+    reset(retries = this.maxRetries) {
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "/accounts/reset-password/", {
           email: this.email,
         })
         .catch(
           function (error) {
-            this.catchErrorAndBlink(error, this.blinkEmail);
+            if (retries > 0) {
+              var attemptNumber = this.maxAttempts - retries + 1
+              console.log(
+                "Attempt " + attemptNumber + " to reset password"
+              );
+              return this.reset(retries - 1);
+            } else {
+              this.catchErrorAndBlink(error, this.blinkEmail);
+            }
           }.bind(this)
         );
     },
   },
 };
-function prepareLinesForSave(lines, retries = 3) {
+function prepareLinesForSave(lines, retries = this.maxRetries) {
   const result = addOrder(lines);
   const requests = [];
   result.forEach((line) => {
@@ -356,7 +404,8 @@ function prepareLinesForSave(lines, retries = 3) {
     )
     .catch(function (error) {
       if (retries > 0) {
-        console.log("Attempt " + (4 - retries + 1) + " to upload all lines");
+        var attemptNumber = this.maxAttempts - retries + 1
+        console.log("Attempt " + attemptNumber + " to upload all lines");
         return prepareLinesForSave(lines, retries - 1);
       } else {
         this.catchError(error);
@@ -370,7 +419,7 @@ function addOrder(lines) {
   }
   return lines;
 }
-function uploadLine(line, retries = 3) {
+function uploadLine(line, retries = this.maxRetries) {
   const request = axios
     .get(
       process.env.VUE_APP_BACKEND_URL +
@@ -389,9 +438,10 @@ function uploadLine(line, retries = 3) {
         .post(postUrl, postData, { headers: { Authorization: "" } })
         .catch(function (error) {
           if (retries > 0) {
+            var attemptNumber = this.maxAttempts - retries + 1
             console.log(
               "Attempt " +
-                (4 - retries + 1) +
+                attemptNumber +
                 " to upload line " +
                 line["lineId"] +
                 " to S3"
@@ -406,9 +456,10 @@ function uploadLine(line, retries = 3) {
     })
     .catch(function (error) {
       if (retries > 0) {
+        var attemptNumber = this.maxAttempts - retries + 1
         console.log(
           "Attempt " +
-            (4 - retries + 1) +
+            attemptNumber +
             " get upload URL for line " +
             line["lineId"]
         );
