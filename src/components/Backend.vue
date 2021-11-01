@@ -100,7 +100,7 @@ export default {
       selectedScriptId: null,
       hidePassword: true,
       maxRetries: 3,
-      maxAttempts: this.maxRetries + 1
+      maxAttempts: this.maxRetries + 1,
     };
   },
   props: {
@@ -114,6 +114,93 @@ export default {
     },
   },
   methods: {
+    prepareLinesForSave(lines, retries = this.maxRetries) {
+      const result = this.addOrder(lines);
+      const requests = [];
+      result.forEach((line) => {
+        if (!line["uploaded"]) {
+          line["lineId"] = uuidv4();
+          requests.push(this.uploadLine(line));
+        }
+      });
+      Promise.all(requests)
+        .then(
+          result.forEach((line) => {
+            if (!line["uploaded"]) {
+              line["uploaded"] = true;
+            }
+          })
+        )
+        .catch(function (error) {
+          if (retries > 0) {
+            var attemptNumber = this.maxAttempts - retries + 1;
+            console.log("Attempt " + attemptNumber + " to upload all lines");
+            return this.prepareLinesForSave(lines, retries - 1);
+          } else {
+            this.catchError(error);
+          }
+        });
+      return result;
+    },
+    addOrder(lines) {
+      for (var i = 0; i < lines.length; i++) {
+        lines[i]["order"] = i;
+      }
+      return lines;
+    },
+    uploadLine(line, retries = this.maxRetries) {
+      const request = axios
+        .get(
+          process.env.VUE_APP_BACKEND_URL +
+            "/get_upload_url/" +
+            line["lineId"] +
+            "/"
+        )
+        .then((response) => {
+          var postUrl = response["data"]["s3Request"]["url"];
+          var postData = new FormData();
+          for (var key in response["data"]["s3Request"]["fields"]) {
+            postData.append(key, response["data"]["s3Request"]["fields"][key]);
+          }
+          postData.append("file", line["recording"]);
+          axios
+            .post(postUrl, postData, { headers: { Authorization: "" } })
+            .catch(function (error) {
+              if (retries > 0) {
+                var attemptNumber = this.maxAttempts - retries + 1;
+                console.log(
+                  "Attempt " +
+                    attemptNumber +
+                    " to upload line " +
+                    line["lineId"] +
+                    " to S3"
+                );
+                return this.uploadLine(line, retries - 1);
+              } else if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              }
+            });
+        })
+        .catch(function (error) {
+          if (retries > 0) {
+            var attemptNumber = this.maxAttempts - retries + 1;
+            console.log(
+              "Attempt " +
+                attemptNumber +
+                " get upload URL for line " +
+                line["lineId"]
+            );
+            return this.uploadLine(line, retries - 1);
+          } else if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+      return request;
+    },
     togglePassword() {
       this.hidePassword = !this.hidePassword;
       if (this.hidePassword) {
@@ -145,7 +232,7 @@ export default {
         })
         .catch(function (error) {
           if (retries > 0) {
-            var attemptNumber = this.maxAttempts - retries + 1
+            var attemptNumber = this.maxAttempts - retries + 1;
             console.log("Attempt " + attemptNumber + " to load scripts");
             return this.loadScripts(retries - 1);
           } else {
@@ -168,7 +255,7 @@ export default {
         .catch(
           function (error) {
             if (retries > 0) {
-              var attemptNumber = this.maxAttempts - retries + 1
+              var attemptNumber = this.maxAttempts - retries + 1;
               console.log("Attempt " + attemptNumber + " to delete script");
               return this.deleteScript(retries - 1);
             } else {
@@ -178,7 +265,7 @@ export default {
         );
     },
     saveChanges(retries = this.maxRetries) {
-      var lines = prepareLinesForSave(this.list);
+      var lines = this.prepareLinesForSave(this.list);
       axios
         .patch(
           process.env.VUE_APP_BACKEND_URL +
@@ -196,7 +283,7 @@ export default {
         .catch(
           function (error) {
             if (retries > 0) {
-              var attemptNumber = this.maxAttempts - retries + 1
+              var attemptNumber = this.maxAttempts - retries + 1;
               console.log("Attempt " + attemptNumber + " to save changes");
               return this.saveChanges(retries - 1);
             } else {
@@ -209,11 +296,12 @@ export default {
       if (error.response.status == 403 || error.response.status == 401) {
         this.blinkLogIn(error);
       } else {
-        let scriptSelectNormalColour = this.$refs.scriptSelect.style
-          .backgroundColor;
+        let scriptSelectNormalColour =
+          this.$refs.scriptSelect.style.backgroundColor;
         this.$refs.scriptSelect.style.backgroundColor = "red";
         setTimeout(() => {
-          this.$refs.scriptSelect.style.backgroundColor = scriptSelectNormalColour;
+          this.$refs.scriptSelect.style.backgroundColor =
+            scriptSelectNormalColour;
         }, 500);
       }
     },
@@ -226,7 +314,7 @@ export default {
       });
     },
     saveAsNew(retries = this.maxRetries) {
-      var lines = prepareLinesForSave(this.list);
+      var lines = this.prepareLinesForSave(this.list);
       axios
         .post(process.env.VUE_APP_BACKEND_URL + "/scripts/", {
           scriptName: this.scriptName,
@@ -243,10 +331,8 @@ export default {
         .catch(
           function (error) {
             if (retries > 0) {
-              var attemptNumber = this.maxAttempts - retries + 1
-              console.log(
-                "Attempt " + attemptNumber + " to save new script"
-              );
+              var attemptNumber = this.maxAttempts - retries + 1;
+              console.log("Attempt " + attemptNumber + " to save new script");
               return this.saveAsNew(retries - 1);
             } else {
               this.catchErrorAndBlink(error, this.blinkSaveNew);
@@ -266,8 +352,8 @@ export default {
       if (error.response.status == 403 || error.response.status == 401) {
         this.blinkLogIn(error);
       } else {
-        let scriptNameNormalColour = this.$refs.scriptName.style
-          .backgroundColor;
+        let scriptNameNormalColour =
+          this.$refs.scriptName.style.backgroundColor;
         this.$refs.scriptName.style.backgroundColor = "red";
         setTimeout(() => {
           this.$refs.scriptName.style.backgroundColor = scriptNameNormalColour;
@@ -291,7 +377,7 @@ export default {
         .catch(
           function (error) {
             if (retries > 0) {
-              var attemptNumber = this.maxAttempts - retries + 1
+              var attemptNumber = this.maxAttempts - retries + 1;
               console.log("Attempt " + attemptNumber + " to log in");
               return this.logIn(retries - 1);
             } else {
@@ -341,7 +427,7 @@ export default {
         .catch(
           function (error) {
             if (retries > 0) {
-              var attemptNumber = this.maxAttempts - retries + 1
+              var attemptNumber = this.maxAttempts - retries + 1;
               console.log("Attempt " + attemptNumber + " to register");
               return this.register(retries - 1);
             } else {
@@ -372,10 +458,8 @@ export default {
         .catch(
           function (error) {
             if (retries > 0) {
-              var attemptNumber = this.maxAttempts - retries + 1
-              console.log(
-                "Attempt " + attemptNumber + " to reset password"
-              );
+              var attemptNumber = this.maxAttempts - retries + 1;
+              console.log("Attempt " + attemptNumber + " to reset password");
               return this.reset(retries - 1);
             } else {
               this.catchErrorAndBlink(error, this.blinkEmail);
@@ -385,93 +469,6 @@ export default {
     },
   },
 };
-function prepareLinesForSave(lines, retries = this.maxRetries) {
-  const result = addOrder(lines);
-  const requests = [];
-  result.forEach((line) => {
-    if (!line["uploaded"]) {
-      line["lineId"] = uuidv4();
-      requests.push(uploadLine(line));
-    }
-  });
-  Promise.all(requests)
-    .then(
-      result.forEach((line) => {
-        if (!line["uploaded"]) {
-          line["uploaded"] = true;
-        }
-      })
-    )
-    .catch(function (error) {
-      if (retries > 0) {
-        var attemptNumber = this.maxAttempts - retries + 1
-        console.log("Attempt " + attemptNumber + " to upload all lines");
-        return prepareLinesForSave(lines, retries - 1);
-      } else {
-        this.catchError(error);
-      }
-    });
-  return result;
-}
-function addOrder(lines) {
-  for (var i = 0; i < lines.length; i++) {
-    lines[i]["order"] = i;
-  }
-  return lines;
-}
-function uploadLine(line, retries = this.maxRetries) {
-  const request = axios
-    .get(
-      process.env.VUE_APP_BACKEND_URL +
-        "/get_upload_url/" +
-        line["lineId"] +
-        "/"
-    )
-    .then((response) => {
-      var postUrl = response["data"]["s3Request"]["url"];
-      var postData = new FormData();
-      for (var key in response["data"]["s3Request"]["fields"]) {
-        postData.append(key, response["data"]["s3Request"]["fields"][key]);
-      }
-      postData.append("file", line["recording"]);
-      axios
-        .post(postUrl, postData, { headers: { Authorization: "" } })
-        .catch(function (error) {
-          if (retries > 0) {
-            var attemptNumber = this.maxAttempts - retries + 1
-            console.log(
-              "Attempt " +
-                attemptNumber +
-                " to upload line " +
-                line["lineId"] +
-                " to S3"
-            );
-            return uploadLine(line, retries - 1);
-          } else if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          }
-        });
-    })
-    .catch(function (error) {
-      if (retries > 0) {
-        var attemptNumber = this.maxAttempts - retries + 1
-        console.log(
-          "Attempt " +
-            attemptNumber +
-            " get upload URL for line " +
-            line["lineId"]
-        );
-        return uploadLine(line, retries - 1);
-      } else if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      }
-    });
-  return request;
-}
 </script>
 <style scoped>
 .email-input {
